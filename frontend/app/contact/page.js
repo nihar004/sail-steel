@@ -251,7 +251,7 @@ export default function ContactPage() {
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
               <div className="bg-slate-900 p-8 text-white text-center">
                 <h2 className="text-3xl font-bold mb-2">Send Us a Message</h2>
-                <p className="text-slate-300">We'll get back to you within 24 hours</p>
+                <p className="text-slate-300">We&apos;ll get back to you within 24 hours</p>
               </div>
               
               <div className="p-8">

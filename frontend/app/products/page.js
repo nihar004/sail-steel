@@ -80,7 +80,6 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Toaster position="bottom-right" /> {/* Add this line */}
       {/* Header */}
       <header className="bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,10 +91,18 @@ export default function ProductsPage() {
               <span className="text-xl font-bold text-gray-900">AutoParts Pro</span>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
-              <a href="#" className="text-blue-600 font-medium">Products</a>
-              <a href="/cart" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Cart</a>
-              <a href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Contact</a>
+              <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                Home
+              </Link>
+              <Link href="/products" className="text-blue-600 font-medium">
+                Products
+              </Link>
+              <Link href="/cart" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                Cart
+              </Link>
+              <Link href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                Contact
+              </Link>
             </nav>
           </div>
         </div>
@@ -104,7 +111,9 @@ export default function ProductsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-          <a href="/" className="hover:text-blue-600 transition-colors">Home</a>
+          <Link href="/" className="hover:text-blue-600 transition-colors">
+            Home
+          </Link>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
