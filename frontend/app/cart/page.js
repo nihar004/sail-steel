@@ -1,87 +1,54 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useCart } from '../context/CartContext';
+import { Trash2, Minus, Plus, Info, Lock } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Premium Brake Pads Set",
-      brand: "Brembo",
-      price: 89.99,
-      originalPrice: 119.99,
-      quantity: 2,
-      image: "/images/placeholder-product.jpg",
-      inStock: true,
-      compatibility: "2018-2023 Honda Accord",
-      partNumber: "BRM-BP001"
-    },
-    {
-      id: 2,
-      name: "High Performance Air Filter",
-      brand: "K&N",
-      price: 45.99,
-      originalPrice: 65.99,
-      quantity: 1,
-      image: "/images/placeholder-product.jpg",
-      inStock: true,
-      compatibility: "2019-2024 Toyota Camry",
-      partNumber: "KN-AF245"
-    },
-    {
-      id: 3,
-      name: "LED Headlight Assembly",
-      brand: "OSRAM",
-      price: 299.99,
-      originalPrice: 399.99,
-      quantity: 1,
-      image: "/images/placeholder-product.jpg",
-      inStock: false,
-      compatibility: "2020-2025 BMW 3 Series",
-      partNumber: "OSR-HL890",
-      estimatedArrival: "2-3 weeks"
-    }
-  ]);
+  const { 
+    cartItems, 
+    removeFromCart, 
+    updateQuantity, 
+    clearCart, 
+    getCartTotal,
+    formatPrice 
+  } = useCart();
 
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
-  const updateQuantity = (id, newQuantity) => {
-    if (newQuantity === 0) {
-      removeItem(id);
-      return;
-    }
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
-
   const applyPromoCode = () => {
-    // Simple promo code logic
     if (promoCode === 'SAVE10') {
       setAppliedPromo({ code: 'SAVE10', discount: 0.1, description: '10% off entire order' });
+      toast.success('Promo code applied successfully!');
     } else if (promoCode === 'FREESHIP') {
       setAppliedPromo({ code: 'FREESHIP', discount: 0, description: 'Free shipping', freeShipping: true });
+      toast.success('Free shipping applied!');
     } else {
-      alert('Invalid promo code');
+      toast.error('Invalid promo code');
     }
     setPromoCode('');
   };
 
   const removePromo = () => {
     setAppliedPromo(null);
+    toast.success('Promo code removed');
   };
 
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const savings = cartItems.reduce((sum, item) => sum + ((item.originalPrice - item.price) * item.quantity), 0);
+  const subtotal = getCartTotal();
+  const savings = cartItems.reduce((sum, item) => {
+    const originalPrice = typeof item.originalPrice === 'string' 
+      ? parseFloat(item.originalPrice.replace('₹', '').replace(',', '')) 
+      : item.originalPrice;
+    const price = typeof item.price === 'string' 
+      ? parseFloat(item.price.replace('₹', '').replace(',', '')) 
+      : item.price;
+    return sum + ((originalPrice - price) * item.quantity);
+  }, 0);
   const promoDiscount = appliedPromo && appliedPromo.discount ? subtotal * appliedPromo.discount : 0;
   const shipping = appliedPromo && appliedPromo.freeShipping ? 0 : (subtotal > 100 ? 0 : 15.99);
   const tax = (subtotal - promoDiscount) * 0.08;
@@ -91,10 +58,13 @@ export default function CartPage() {
     setIsCheckingOut(true);
     // Simulate checkout process
     setTimeout(() => {
+      toast.success('Order placed successfully!');
+      clearCart();
       window.location.href = '/checkout';
     }, 2000);
   };
 
+  // Show empty cart state
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 pt-20">
@@ -194,12 +164,13 @@ export default function CartPage() {
                         <p className="text-sm text-blue-600">{item.compatibility}</p>
                       </div>
                       <button
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => {
+                          removeFromCart(item.id);
+                          toast.success('Item removed from cart');
+                        }}
                         className="text-gray-400 hover:text-red-500 transition-colors p-2"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
+                        <Trash2 className="w-5 h-5" />
                       </button>
                     </div>
 
@@ -222,35 +193,30 @@ export default function CartPage() {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-2">
-                          <span className="text-2xl font-bold text-gray-900">${item.price.toFixed(2)}</span>
+                          <span className="text-2xl font-bold text-gray-900">{formatPrice(item.price)}</span>
                           {item.originalPrice > item.price && (
-                            <span className="text-lg text-gray-500 line-through">${item.originalPrice.toFixed(2)}</span>
+                            <span className="text-lg text-gray-500 line-through">{formatPrice(item.originalPrice)}</span>
                           )}
                         </div>
                       </div>
 
                       {/* Quantity Controls */}
                       <div className="flex items-center space-x-3">
-                        <span className="text-sm text-gray-600">Qty:</span>
-                        <div className="flex items-center border border-gray-300 rounded-lg">
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                            </svg>
-                          </button>
-                          <span className="px-4 py-2 border-x border-gray-300 min-w-[3rem] text-center">{item.quantity}</span>
-                          <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => updateQuantity(item.id, Math.max(0, item.quantity - 1))}
+                          className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </button>
+                        <span className="px-4 py-2 border-x border-gray-300 min-w-[3rem] text-center">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -314,34 +280,34 @@ export default function CartPage() {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold">{formatPrice(subtotal)}</span>
                 </div>
                 {savings > 0 && (
                   <div className="flex justify-between text-green-600">
                     <span>You save</span>
-                    <span className="font-semibold">-${savings.toFixed(2)}</span>
+                    <span className="font-semibold">-{formatPrice(savings)}</span>
                   </div>
                 )}
                 {promoDiscount > 0 && (
                   <div className="flex justify-between text-green-600">
                     <span>Promo discount</span>
-                    <span className="font-semibold">-${promoDiscount.toFixed(2)}</span>
+                    <span className="font-semibold">-{formatPrice(promoDiscount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
                   <span className="font-semibold">
-                    {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+                    {shipping === 0 ? 'FREE' : `${formatPrice(shipping)}`}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax</span>
-                  <span className="font-semibold">${tax.toFixed(2)}</span>
+                  <span className="font-semibold">{formatPrice(tax)}</span>
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-bold text-gray-900">Total</span>
-                    <span className="text-2xl font-bold text-gray-900">${total.toFixed(2)}</span>
+                    <span className="text-2xl font-bold text-gray-900">{formatPrice(total)}</span>
                   </div>
                 </div>
               </div>

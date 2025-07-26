@@ -2,6 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { 
+  Phone, 
+  MessageCircle, 
+  Mail, 
+  MapPin, 
+  Clock, 
+  CheckCircle2, 
+  ChevronDown,
+  Search,
+  ArrowRight
+} from 'lucide-react';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -23,36 +34,36 @@ export default function ContactPage() {
 
   const contactMethods = [
     {
-      icon: '📞',
+      icon: <Phone className="w-6 h-6 text-white" />,
       title: 'Phone Support',
       description: 'Speak with our parts experts',
       details: '+1 (555) 123-4567',
       subDetails: 'Mon-Fri: 8AM-8PM EST',
-      color: 'from-green-500 to-emerald-600'
+      color: 'from-slate-800 to-slate-900'
     },
     {
-      icon: '💬',
+      icon: <MessageCircle className="w-6 h-6 text-white" />,
       title: 'Live Chat',
       description: 'Get instant help online',
       details: 'Chat with us now',
       subDetails: 'Available 24/7',
-      color: 'from-blue-500 to-cyan-600'
+      color: 'from-slate-700 to-slate-800'
     },
     {
-      icon: '✉️',
+      icon: <Mail className="w-6 h-6 text-white" />,
       title: 'Email Support',
       description: 'Send us a detailed message',
       details: 'support@autopartspro.com',
       subDetails: 'Response within 24 hours',
-      color: 'from-purple-500 to-pink-600'
+      color: 'from-slate-800 to-slate-900'
     },
     {
-      icon: '📍',
+      icon: <MapPin className="w-6 h-6 text-white" />,
       title: 'Visit Our Store',
       description: 'Come see us in person',
       details: '123 Auto Parts Blvd',
       subDetails: 'Detroit, MI 48201',
-      color: 'from-orange-500 to-red-600'
+      color: 'from-slate-700 to-slate-800'
     }
   ];
 
@@ -134,7 +145,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">AP</span>
               </div>
               <span className="text-xl font-bold text-gray-900">AutoParts Pro</span>
@@ -186,7 +197,7 @@ export default function ContactPage() {
               className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
             >
               <div className={`w-16 h-16 bg-gradient-to-r ${method.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                <span className="text-2xl">{method.icon}</span>
+                {method.icon}
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2 text-center">{method.title}</h3>
               <p className="text-gray-600 mb-3 text-center text-sm">{method.description}</p>
@@ -204,7 +215,7 @@ export default function ContactPage() {
                 onClick={() => setActiveTab('contact')}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all ${
                   activeTab === 'contact'
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    ? 'bg-slate-900 text-white shadow-lg'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
@@ -214,7 +225,7 @@ export default function ContactPage() {
                 onClick={() => setActiveTab('faq')}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all ${
                   activeTab === 'faq'
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    ? 'bg-slate-900 text-white shadow-lg'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
@@ -224,7 +235,7 @@ export default function ContactPage() {
                 onClick={() => setActiveTab('location')}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all ${
                   activeTab === 'location'
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    ? 'bg-slate-900 text-white shadow-lg'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
@@ -238,9 +249,9 @@ export default function ContactPage() {
         <div className="max-w-4xl mx-auto">
           {activeTab === 'contact' && (
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white text-center">
+              <div className="bg-slate-900 p-8 text-white text-center">
                 <h2 className="text-3xl font-bold mb-2">Send Us a Message</h2>
-                <p className="text-blue-100">We&#39;ll get back to you within 24 hours</p>
+                <p className="text-slate-300">We'll get back to you within 24 hours</p>
               </div>
               
               <div className="p-8">
@@ -265,7 +276,7 @@ export default function ContactPage() {
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                           placeholder="John Doe"
                         />
                       </div>
@@ -277,7 +288,7 @@ export default function ContactPage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                           placeholder="john@example.com"
                         />
                       </div>
@@ -291,7 +302,7 @@ export default function ContactPage() {
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                           placeholder="(555) 123-4567"
                         />
                       </div>
@@ -302,7 +313,7 @@ export default function ContactPage() {
                           value={formData.subject}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                         >
                           <option value="general">General Inquiry</option>
                           <option value="parts">Parts Question</option>
@@ -323,7 +334,7 @@ export default function ContactPage() {
                           name="vehicle.year"
                           value={formData.vehicle.year}
                           onChange={handleInputChange}
-                          className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                           placeholder="Year (e.g., 2020)"
                         />
                         <input
@@ -331,7 +342,7 @@ export default function ContactPage() {
                           name="vehicle.make"
                           value={formData.vehicle.make}
                           onChange={handleInputChange}
-                          className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                           placeholder="Make (e.g., Honda)"
                         />
                         <input
@@ -339,7 +350,7 @@ export default function ContactPage() {
                           name="vehicle.model"
                           value={formData.vehicle.model}
                           onChange={handleInputChange}
-                          className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                          className="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all"
                           placeholder="Model (e.g., Accord)"
                         />
                       </div>
@@ -353,7 +364,7 @@ export default function ContactPage() {
                         onChange={handleInputChange}
                         required
                         rows={6}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all resize-none"
                         placeholder="Please describe how we can help you..."
                       />
                     </div>
@@ -361,7 +372,7 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      className="w-full bg-slate-900 text-white py-4 rounded-xl font-semibold text-lg hover:bg-slate-800 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
                       {isSubmitting ? (
                         <div className="flex items-center justify-center">
@@ -383,9 +394,9 @@ export default function ContactPage() {
 
           {activeTab === 'faq' && (
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white text-center">
+              <div className="bg-slate-900 p-8 text-white text-center">
                 <h2 className="text-3xl font-bold mb-2">Frequently Asked Questions</h2>
-                <p className="text-blue-100">Find quick answers to common questions</p>
+                <p className="text-slate-300">Find quick answers to common questions</p>
               </div>
               
               <div className="p-8">
@@ -398,16 +409,11 @@ export default function ContactPage() {
                       >
                         <div className="flex justify-between items-center">
                           <h3 className="font-semibold text-gray-900">{faq.question}</h3>
-                          <svg
+                          <ChevronDown 
                             className={`w-5 h-5 text-gray-500 transform transition-transform duration-200 ${
                               openFaq === index ? 'rotate-180' : ''
                             }`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
+                          />
                         </div>
                       </button>
                       {openFaq === index && (
@@ -424,9 +430,9 @@ export default function ContactPage() {
 
           {activeTab === 'location' && (
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white text-center">
+              <div className="bg-slate-900 p-8 text-white text-center">
                 <h2 className="text-3xl font-bold mb-2">Visit Our Store</h2>
-                <p className="text-blue-100">Come see our parts in person</p>
+                <p className="text-slate-300">Come see our parts in person</p>
               </div>
               
               <div className="p-8">
@@ -436,23 +442,18 @@ export default function ContactPage() {
                     
                     <div className="space-y-6">
                       <div className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
+                        <div className="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <MapPin className="w-6 h-6 text-white" />
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900 mb-1">Address</h4>
-                          <p className="text-gray-600">123 Auto Parts Boulevard<br />Detroit, MI 48201</p>
+                          <p className="text-gray-600">XYZ road<br />Delhi, India</p>
                         </div>
                       </div>
 
                       <div className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
+                        <div className="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Clock className="w-6 h-6 text-white" />
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900 mb-1">Store Hours</h4>
@@ -465,10 +466,8 @@ export default function ContactPage() {
                       </div>
 
                       <div className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                          </svg>
+                        <div className="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Phone className="w-6 h-6 text-white" />
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900 mb-1">Phone</h4>
@@ -481,27 +480,19 @@ export default function ContactPage() {
                       <h4 className="font-semibold text-gray-900 mb-4">Services Available</h4>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex items-center space-x-2">
-                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
+                          <CheckCircle2 className="w-5 h-5 text-green-600" />
                           <span className="text-sm text-gray-600">Professional Installation</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
+                          <CheckCircle2 className="w-5 h-5 text-green-600" />
                           <span className="text-sm text-gray-600">Part Compatibility Check</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
+                          <CheckCircle2 className="w-5 h-5 text-green-600" />
                           <span className="text-sm text-gray-600">Free Consultation</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
+                          <CheckCircle2 className="w-5 h-5 text-green-600" />
                           <span className="text-sm text-gray-600">Warranty Support</span>
                         </div>
                       </div>
@@ -528,18 +519,20 @@ export default function ContactPage() {
         </div>
 
         {/* Emergency Contact */}
-        <div className="mt-16 bg-gradient-to-r from-red-500 to-pink-600 rounded-2xl p-8 text-white text-center">
+        <div className="mt-16 bg-slate-900 rounded-2xl p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-4">Need Immediate Help?</h2>
-          <p className="mb-6">For urgent parts requests or roadside assistance</p>
+          <p className="mb-6 text-slate-300">For urgent parts requests or roadside assistance</p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="tel:+15551234567"
-              className="bg-white text-red-600 px-6 py-3 rounded-full font-semibold hover:bg-red-50 transition-all transform hover:scale-105"
+              className="bg-white text-slate-900 px-6 py-3 rounded-full font-semibold hover:bg-slate-100 transition-all transform hover:scale-105 flex items-center space-x-2"
             >
-              📞 Emergency Hotline
+              <Phone className="w-5 h-5" />
+              <span>Emergency Hotline</span>
             </a>
-            <button className="bg-white/20 text-white px-6 py-3 rounded-full font-semibold hover:bg-white/30 transition-all transform hover:scale-105">
-              💬 Live Chat
+            <button className="bg-slate-800 text-white px-6 py-3 rounded-full font-semibold hover:bg-slate-700 transition-all transform hover:scale-105 flex items-center space-x-2">
+              <MessageCircle className="w-5 h-5" />
+              <span>Live Chat</span>
             </button>
           </div>
         </div>

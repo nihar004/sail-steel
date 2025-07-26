@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
+import dummyData from './data/dummy_data.json';
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -30,53 +31,30 @@ export default function Home() {
     }
   ];
 
-  const categories = [
-    { name: "Engine Parts", icon: "🔧", count: "2,500+ parts" },
-    { name: "Brake System", icon: "🛞", count: "1,800+ parts" },
-    { name: "Suspension", icon: "⚙️", count: "1,200+ parts" },
-    { name: "Electrical", icon: "⚡", count: "3,000+ parts" },
-    { name: "Body Parts", icon: "🚗", count: "2,200+ parts" },
-    { name: "Accessories", icon: "✨", count: "1,500+ parts" }
-  ];
+  // Update the categories mapping to include images instead of icons
+  const categories = dummyData.categories.map(category => ({
+    name: category.name,
+    image: category.image, // Use the image path from JSON
+    count: `${category.totalParts.toLocaleString()}+ parts`,
+    description: category.description,
+    slug: category.slug
+  }));
 
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Premium Brake Pads Set",
-      price: "$89.99",
-      originalPrice: "$119.99",
-      image: "/images/placeholder-product.jpg",
-      rating: 4.8,
-      reviews: 324
-    },
-    {
-      id: 2,
-      name: "High Performance Air Filter",
-      price: "$45.99",
-      originalPrice: "$65.99",
-      image: "/images/placeholder-product.jpg",
-      rating: 4.9,
-      reviews: 156
-    },
-    {
-      id: 3,
-      name: "LED Headlight Assembly",
-      price: "$299.99",
-      originalPrice: "$399.99",
-      image: "/images/placeholder-product.jpg",
-      rating: 4.7,
-      reviews: 89
-    },
-    {
-      id: 4,
-      name: "Oil Filter Premium Grade",
-      price: "$24.99",
-      originalPrice: "$34.99",
-      image: "/images/placeholder-product.jpg",
-      rating: 4.6,
-      reviews: 445
-    }
-  ];
+  const featuredProducts = dummyData.categories
+    .flatMap(category => category.products)
+    .filter(product => product.rating >= 4.6)
+    .slice(0, 4)
+    .map(product => ({
+      id: product.id,
+      name: product.name,
+      price: `₹${product.price.toLocaleString('en-IN')}`,
+      originalPrice: `₹${product.originalPrice.toLocaleString('en-IN')}`,
+      image: product.image,
+      rating: product.rating,
+      reviews: product.reviews,
+      brand: product.brand,
+      inStock: product.inStock
+    }));
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -112,7 +90,6 @@ export default function Home() {
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
               <a href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Products</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Categories</a>
               <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">About</a>
               <a href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Contact</a>
             </nav>
@@ -138,7 +115,9 @@ export default function Home() {
                 href="/cart" 
                 className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors block"
               >
-                <ShoppingCart className="w-6 h-6" />
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h18M3 9h18M3 15h18M3 21h18" />
+                </svg>
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   3
                 </span>
@@ -234,31 +213,38 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((category, index) => (
-              <div
+              <Link 
+                href={`/products?category=${category.slug}`}
                 key={index}
                 className="group bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer relative overflow-hidden"
               >
-                {/* Top border */}
+                {/* Border animations */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-purple-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-                {/* Right border */}
                 <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-purple-600 to-blue-600 transform origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-500 delay-100"></div>
-                {/* Bottom border */}
                 <div className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-l from-purple-600 to-blue-600 transform origin-right scale-x-0 group-hover:scale-x-100 transition-transform duration-500 delay-200"></div>
-                {/* Left border */}
                 <div className="absolute bottom-0 left-0 w-1 h-full bg-gradient-to-t from-blue-600 to-purple-600 transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-500 delay-300"></div>
                 
-                <div className="text-5xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 animate-float">
-                  {category.icon}
+                {/* Replace emoji with Image */}
+                <div className="relative w-full h-48 mb-6 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
                 </div>
+
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{category.name}</h3>
                 <p className="text-gray-600 mb-4">{category.count}</p>
+                <p className="text-gray-500 mb-4 line-clamp-2">{category.description}</p>
                 <div className="flex items-center text-blue-600 font-medium group-hover:text-purple-600 transition-colors">
                   <span>Explore Category</span>
                   <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -281,8 +267,14 @@ export default function Home() {
                 className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
               >
                 <div className="relative overflow-hidden">
-                  <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 group-hover:scale-105 transition-transform duration-500">
-                    {/* Product image here */}
+                  <div className="relative w-full h-48">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    />
                   </div>
                   <div className="absolute top-4 right-4">
                     <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold transform -rotate-3 shadow-lg">
@@ -292,6 +284,7 @@ export default function Home() {
                 </div>
                 
                 <div className="p-6">
+                  <p className="text-sm text-gray-500 mb-2">{product.brand}</p>
                   <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                     {product.name}
                   </h3>
@@ -362,22 +355,65 @@ export default function Home() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">Stay Updated</h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Get the latest deals, new arrivals, and automotive tips delivered to your inbox
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-6 py-4 rounded-full text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/30"
-            />
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold hover:bg-blue-50 transition-all transform hover:scale-105">
-              Subscribe
-            </button>
+      <section className="py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center">
+            <span className="bg-teal-500/10 text-teal-400 text-sm font-medium px-4 py-2 rounded-full inline-block mb-6">
+              Newsletter
+            </span>
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Get Expert Auto Tips In Your Inbox
+            </h2>
+            <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
+              Join our community of auto enthusiasts. Receive exclusive deals, maintenance tips, and industry insights.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <div className="flex-1 relative">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full px-6 py-4 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                />
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <button className="bg-teal-500 hover:bg-teal-400 text-white px-8 py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl hover:shadow-teal-500/20 active:scale-100">
+                Subscribe
+              </button>
+            </div>
+
+            {/* Trust badges */}
+            <div className="mt-10 flex items-center justify-center gap-x-6 text-sm text-slate-400">
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                100% Secure
+              </div>
+              <div className="w-px h-4 bg-slate-700"></div>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                No Spam
+              </div>
+              <div className="w-px h-4 bg-slate-700"></div>
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Unsubscribe Anytime
+              </div>
+            </div>
           </div>
         </div>
       </section>

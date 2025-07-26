@@ -1,0 +1,40 @@
+public/images/
+├── categories/
+│   ├── engine-parts.jpg
+│   ├── brake-system.jpg
+│   ├── suspension.jpg
+│   ├── electrical.jpg
+│   ├── body-parts.jpg
+│   └── accessories.jpg
+├── products/
+│   ├── engine/
+│   │   ├── oil-filter-premium.jpg
+│   │   ├── spark-plugs-performance.jpg
+│   │   └── cold-air-intake.jpg
+│   ├── brakes/
+│   │   ├── ceramic-brake-pads.jpg
+│   │   ├── performance-rotors.jpg
+│   │   └── brake-fluid-dot4.jpg
+│   ├── suspension/
+│   │   ├── front-strut-assembly.jpg
+│   │   ├── rear-shocks.jpg
+│   │   └── sway-bar-links.jpg
+│   ├── electrical/
+│   │   ├── led-headlight-kit.jpg
+│   │   ├── agm-battery.jpg
+│   │   └── wiring-harness.jpg
+│   ├── body/
+│   │   ├── front-bumper-cover.jpg
+│   │   ├── side-mirror-assembly.jpg
+│   │   └── tailgate-handle.jpg
+│   └── accessories/
+│       ├── floor-mats-set.jpg
+│       ├── roof-cargo-box.jpg
+│       └── tonneau-cover.jpg
+└── brands/
+    ├── brembo-logo.png
+    ├── kn-logo.png
+    ├── monroe-logo.png
+    ├── osram-logo.png
+    ├── weathertech-logo.png
+    └── mobil1-logo.png
