@@ -13,19 +13,19 @@ export default function Home() {
     {
       title: "Premium Auto Parts",
       subtitle: "Quality parts for every vehicle",
-      image: "/images/hero-1.jpg",
+      image: "/parts_image.jpg",
       cta: "Shop Now"
     },
     {
       title: "Expert Installation",
       subtitle: "Professional service guaranteed",
-      image: "/images/hero-2.jpg",
+      image: "/mechanic_image.jpg",
       cta: "Learn More"
     },
     {
       title: "Fast Delivery",
       subtitle: "Get your parts in 24-48 hours",
-      image: "/images/hero-3.jpg",
+      image: "/delivery_image.jpg",
       cta: "Order Today"
     }
   ];
