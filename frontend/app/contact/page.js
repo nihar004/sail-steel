@@ -252,7 +252,7 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h3>
-                    <p className="text-gray-600">Thank you for contacting us. We'll respond within 24 hours.</p>
+                    <p className="text-gray-600">Thank you for contacting us. We&apos;ll respond within 24 hours.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
