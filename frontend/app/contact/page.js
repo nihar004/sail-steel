@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -139,10 +140,18 @@ export default function ContactPage() {
               <span className="text-xl font-bold text-gray-900">AutoParts Pro</span>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
-              <a href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Products</a>
-              <a href="/cart" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Cart</a>
-              <a href="#" className="text-blue-600 font-medium">Contact</a>
+              <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                Home
+              </Link>
+              <Link href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                Products
+              </Link>
+              <Link href="/cart" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                Cart
+              </Link>
+              <Link href="/contact" className="text-blue-600 font-medium">
+                Contact
+              </Link>
             </nav>
           </div>
         </div>
@@ -151,7 +160,9 @@ export default function ContactPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-          <a href="/" className="hover:text-blue-600 transition-colors">Home</a>
+          <Link href="/" className="hover:text-blue-600 transition-colors">
+            Home
+          </Link>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -229,7 +240,7 @@ export default function ContactPage() {
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white text-center">
                 <h2 className="text-3xl font-bold mb-2">Send Us a Message</h2>
-                <p className="text-blue-100">We'll get back to you within 24 hours</p>
+                <p className="text-blue-100">We&#39;ll get back to you within 24 hours</p>
               </div>
               
               <div className="p-8">

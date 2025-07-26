@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([
@@ -108,9 +109,9 @@ export default function CartPage() {
                 <span className="text-xl font-bold text-gray-900">AutoParts Pro</span>
               </div>
               <nav className="hidden md:flex items-center space-x-8">
-                <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
-                <a href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Products</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Categories</a>
+                <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</Link>
+                <Link href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Products</Link>
+                <Link href="/categories" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Categories</Link>
               </nav>
             </div>
           </div>
@@ -125,9 +126,9 @@ export default function CartPage() {
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
           <p className="text-gray-600 mb-8 text-center max-w-md">Start shopping to add items to your cart and build your perfect vehicle setup.</p>
-          <a href="/products" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105">
+          <Link href="/products" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105">
             Continue Shopping
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -146,9 +147,9 @@ export default function CartPage() {
               <span className="text-xl font-bold text-gray-900">AutoParts Pro</span>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
-              <a href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Products</a>
-              <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Categories</a>
+              <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</Link>
+              <Link href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Products</Link>
+              <Link href="/categories" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Categories</Link>
             </nav>
           </div>
         </div>
@@ -157,7 +158,7 @@ export default function CartPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-          <a href="/" className="hover:text-blue-600 transition-colors">Home</a>
+          <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -264,12 +265,12 @@ export default function CartPage() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Need more parts?</h3>
                   <p className="text-gray-600">Continue browsing our extensive catalog</p>
                 </div>
-                <a
+                <Link
                   href="/products"
                   className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 px-6 py-3 rounded-xl font-semibold hover:from-gray-200 hover:to-gray-300 transition-all transform hover:scale-105"
                 >
                   Continue Shopping
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -350,7 +351,7 @@ export default function CartPage() {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                   <div className="flex items-center">
                     <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m-1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div className="text-sm">
                       <p className="text-blue-800 font-medium">Add ${(100 - subtotal).toFixed(2)} more for FREE shipping!</p>
