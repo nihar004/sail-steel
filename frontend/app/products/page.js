@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import dummyData from '../data/dummy_data.json';
 import { Search, Grid, List, ChevronDown, Star, Heart, Eye } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import toast, { Toaster } from 'react-hot-toast'; // Update this line
+import toast, { Toaster } from 'react-hot-toast';
 
-export default function ProductsPage() {
+// Create a wrapper component that uses searchParams
+function ProductsContent() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get('category');
   const { addToCart, getCartCount } = useCart();
@@ -346,5 +347,18 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main component with Suspense boundary
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }
