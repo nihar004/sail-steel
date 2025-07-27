@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import { registerWithEmail, loginWithEmail, loginWithGoogle, resetPassword } from '../utils/auth';
+import toast from 'react-hot-toast';
 
-export default function AuthPages() {
+export default function AuthPage() {
   const searchParams = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
   
@@ -27,6 +30,16 @@ export default function AuthPages() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const router = useRouter();
+  const { user } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -35,9 +48,56 @@ export default function AuthPages() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    
+    try {
+      if (isLogin) {
+        await loginWithEmail(formData.email, formData.password);
+        toast.success('Successfully logged in!');
+        router.push('/dashboard');
+      } else {
+        // Validate passwords match
+        if (formData.password !== formData.confirmPassword) {
+          return toast.error('Passwords do not match');
+        }
+        
+        await registerWithEmail(formData.email, formData.password, {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          company: formData.company,
+          phone: formData.phone,
+          businessType: formData.businessType
+        });
+        
+        toast.success('Account created successfully!');
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await loginWithGoogle();
+      toast.success('Successfully logged in with Google!');
+      router.push('/dashboard');
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    try {
+      if (!formData.email) {
+        return toast.error('Please enter your email address');
+      }
+      await resetPassword(formData.email);
+      toast.success('Password reset email sent!');
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -197,7 +257,7 @@ export default function AuthPages() {
                       value={formData.firstName}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                      placeholder="John"
+                      placeholder="Nihar"
                       required
                     />
                   </div>
@@ -211,7 +271,7 @@ export default function AuthPages() {
                       value={formData.lastName}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                      placeholder="Doe"
+                      placeholder="Singla"
                       required
                     />
                   </div>
@@ -220,7 +280,7 @@ export default function AuthPages() {
                 {/* Company */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Company Name
+                    Company Name (Optional)
                   </label>
                   <input
                     type="text"
@@ -285,7 +345,7 @@ export default function AuthPages() {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 pl-11 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                  placeholder="john@company.com"
+                  placeholder="XYZ@company.com"
                   required
                 />
                 <div className="absolute left-3 top-3.5">
@@ -380,7 +440,10 @@ export default function AuthPages() {
                   />
                   <span className="ml-2 text-sm text-gray-300">Remember me</span>
                 </label>
-                <a href="#" className="text-sm text-orange-400 hover:text-orange-300 transition-colors">
+                <a 
+                  onClick={handleForgotPassword}
+                  className="text-sm text-orange-400 hover:text-orange-300 transition-colors cursor-pointer"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -428,7 +491,10 @@ export default function AuthPages() {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <button className="w-full inline-flex justify-center py-3 px-4 border border-slate-700 rounded-xl bg-slate-800/50 text-sm font-medium text-gray-300 hover:bg-slate-800 hover:text-white transition-all">
+              <button 
+                onClick={handleGoogleSignIn}
+                className="w-full inline-flex justify-center py-3 px-4 border border-slate-700 rounded-xl bg-slate-800/50 text-sm font-medium text-gray-300 hover:bg-slate-800 hover:text-white transition-all"
+              >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>

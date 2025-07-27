@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
@@ -23,18 +24,20 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <CartProvider>
-          <Suspense
-            fallback={
-              <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-              </div>
-            }
-          >
-            {children}
-          </Suspense>
-          <Toaster position="bottom-right" />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Suspense
+              fallback={
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+                </div>
+              }
+            >
+              {children}
+            </Suspense>
+            <Toaster position="bottom-right" />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
