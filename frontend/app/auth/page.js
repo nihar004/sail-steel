@@ -108,14 +108,14 @@ export default function AuthPage() {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('/steel_factory_modern.jpg')",
+            backgroundImage: "url('/steel-warehouse-2.jpg')",
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-orange-900/90 via-red-900/80 to-slate-900/90"></div>
         </div>
         
-        {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center px-12 py-16 text-white">
+        {/* Content - Changed from justify-center to justify-start and added padding-top */}
+        <div className="relative z-10 flex flex-col justify-start pt-12 px-12 h-full text-white">
           {/* Logo */}
           <div className="flex items-center space-x-3 mb-12">
             <div className="w-14 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg flex items-center justify-center shadow-xl">
