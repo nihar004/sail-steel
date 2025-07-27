@@ -36,3 +36,19 @@
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+:root {
+  --sail-orange: #FF5722;
+  --sail-red: #C62828;
+  --sail-gray: #263238;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.gradient-text {
+  background: linear-gradient(to right, var(--sail-orange), var(--sail-red));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
