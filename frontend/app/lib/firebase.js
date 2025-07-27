@@ -3,13 +3,13 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY?.replace(/['"]/g, ''),
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN?.replace(/['"]/g, ''),
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.replace(/['"]/g, ''),
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.replace(/['"]/g, ''),
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID?.replace(/['"]/g, ''),
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID?.replace(/['"]/g, ''),
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID?.replace(/['"]/g, '')
+  apiKey: "AIzaSyCcNwViRu3RNQU3sAdETN7ZEDwaJ2z892o",
+  authDomain: "sail-steel.firebaseapp.com",
+  projectId: "sail-steel",
+  storageBucket: "sail-steel.firebasestorage.app",
+  messagingSenderId: "573731354245",
+  appId: "1:573731354245:web:da3d5cc148c40673f25bec",
+  measurementId: "G-VJH814GV36"
 };
 
 console.log('Firebase Config:', firebaseConfig); // For debugging, remove in production
