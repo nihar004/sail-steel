@@ -528,9 +528,9 @@ export default function Home() {
             <span className="bg-orange-100 text-orange-600 text-sm font-medium px-4 py-2 rounded-full inline-block mb-4">
               Why Choose SAIL
             </span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">India's Most Trusted Steel Brand</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">India&lsquo;s Most Trusted Steel Brand</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              With over 70 years of excellence, SAIL has been the backbone of India's infrastructure development
+              With over 70 years of excellence, SAIL has been the backbone of India&lsquo;s infrastructure development
             </p>
           </div>
 
@@ -684,7 +684,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-gray-400 mb-6">
-                India's largest steel producer, committed to providing quality steel products directly to consumers and businesses.
+                India&lsquo;s largest steel producer, committed to providing quality steel products directly to consumers and businesses.
               </p>
               <div className="flex space-x-4">
                 <a href="#" className="text-gray-400 hover:text-white transition-colors">

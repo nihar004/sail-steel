@@ -70,7 +70,7 @@ export default function AuthPages() {
           {/* Main Content */}
           <div className="mb-12">
             <h1 className="text-4xl font-bold mb-6 leading-tight">
-              {isLogin ? 'Welcome Back to' : 'Join'} India's Premier Steel Marketplace
+              {isLogin ? 'Welcome Back to' : 'Join'} India&lsquo;s Premier Steel Marketplace
             </h1>
             <p className="text-xl text-gray-200 mb-8 leading-relaxed">
               {isLogin 
