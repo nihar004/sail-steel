@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { 
   Phone, 
   MessageCircle, 
@@ -10,9 +9,9 @@ import {
   Clock, 
   CheckCircle2, 
   ChevronDown,
-  Search,
-  ArrowRight
 } from 'lucide-react';
+import Header from '../components/Header';
+import Footer from '../components/Footer'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -141,47 +140,11 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">AP</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">AutoParts Pro</span>
-            </div>
-            <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-                Home
-              </Link>
-              <Link href="/products" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-                Products
-              </Link>
-              <Link href="/cart" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-                Cart
-              </Link>
-              <Link href="/contact" className="text-blue-600 font-medium">
-                Contact
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header/>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-          <Link href="/" className="hover:text-blue-600 transition-colors">
-            Home
-          </Link>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-          <span className="text-gray-900 font-medium">Contact Us</span>
-        </nav>
-
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1 mb-22">
         {/* Hero Section */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 mt-32">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Get in Touch</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Our automotive experts are here to help you find the perfect parts for your vehicle. 
@@ -537,6 +500,8 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
+
+      <Footer/>
     </div>
   );
 }

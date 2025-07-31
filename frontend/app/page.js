@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { 
+import {
   Search, 
   Menu, 
   UserCircle2,
@@ -15,22 +15,13 @@ import {
   Building2, 
   Star, 
   Users,
-  Mail,
-  Info,
-  CheckCircle,
-  Twitter,
-  Linkedin,
   ChevronRight
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-
-// import dummyData from './data/dummy_data.json';
+import Footer from "./components/Footer";
+import Header from './components/Header';
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-  const router = useRouter();
 
   const heroSlides = [
     {
@@ -105,7 +96,7 @@ export default function Home() {
       name: "TMT Steel Bars - Fe 500D Grade",
       price: "₹52,000",
       originalPrice: "₹55,000",
-      image: "/tmt_bars.jpg",
+      image: "/images/categories/accessories.avif",
       rating: 4.8,
       reviews: 245,
       brand: "SAIL",
@@ -117,7 +108,7 @@ export default function Home() {
       name: "Galvanized Steel Sheets",
       price: "₹68,500",
       originalPrice: "₹72,000",
-      image: "/galvanized_sheets.jpg",
+      image: "/images/categories/body.jpg",
       rating: 4.7,
       reviews: 189,
       brand: "SAIL",
@@ -129,7 +120,7 @@ export default function Home() {
       name: "MS I-Beam ISMB 200",
       price: "₹45,800",
       originalPrice: "₹48,500",
-      image: "/i_beam.jpg",
+      image: "/images/categories/brake-system.webp",
       rating: 4.9,
       reviews: 156,
       brand: "SAIL",
@@ -141,7 +132,7 @@ export default function Home() {
       name: "ERW Steel Pipes",
       price: "₹38,200",
       originalPrice: "₹41,000",
-      image: "/erw_pipes.jpg",
+      image: "/images/categories/engine-parts.jpg",
       rating: 4.6,
       reviews: 203,
       brand: "SAIL",
@@ -156,155 +147,11 @@ export default function Home() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
   
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className={`fixed w-full z-50 transition-all duration-300 ${
-        scrollY > 100 ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-md'
-      }`}>
-
-        {/* Main header */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            {/* Logo */}
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-10 bg-gradient-to-r from-orange-600 to-red-700 rounded flex items-center justify-center">
-                <span className="text-white font-bold text-lg">SAIL</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-gray-900">SAIL Steel</span>
-                <span className="text-xs text-gray-600">Ministry of Steel, Govt. of India</span>
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
-                Home
-              </Link>
-              <div className="relative group">
-                <button className="flex items-center text-gray-700 hover:text-orange-600 font-medium transition-colors">
-                  Products
-                  <ChevronDown className="w-4 h-4 ml-1" />
-                </button>
-                <div className="absolute top-full left-0 w-64 bg-white shadow-lg rounded-lg py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
-                  {categories.map((category, index) => (
-                    <Link 
-                      key={index}
-                      href={`/products?category=${category.slug}`}
-                      className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <Link href="/bulk-orders" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
-                Bulk Orders
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
-                About SAIL
-              </Link>
-            </nav>
-
-            {/* Right side */}
-            <div className="flex items-center space-x-6">
-              {/* Search */}
-              <div className="hidden lg:block relative">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                />
-                <Search className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" />
-              </div>
-
-              {/* Cart */}
-              <Link 
-                href="/cart" 
-                className="relative p-2 text-gray-700 hover:text-orange-600 transition-colors"
-              >
-                <ShoppingBag className="w-6 h-6" />
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  2
-                </span>
-              </Link>
-
-              {/* Auth buttons */}
-              <div className="hidden md:flex items-center space-x-4">
-                <button 
-                  onClick={() => router.push('/auth?mode=login')} 
-                  className="flex items-center text-gray-700 hover:text-orange-600 transition-colors"
-                >
-                  <LogIn className="w-5 h-5 mr-1" />
-                  Login
-                </button>
-                <button 
-                  onClick={() => router.push('/auth?mode=signup')}
-                  className="bg-gradient-to-r from-orange-600 to-red-700 text-white px-6 py-2 
-                    rounded-full hover:from-orange-700 hover:to-red-800 transition-all transform 
-                    hover:scale-105 font-medium"
-                >
-                  Sign Up
-                </button>
-              </div>
-
-              {/* Mobile menu button */}
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-gray-700 hover:text-orange-600"
-              >
-                <Menu className="w-6 h-6" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t">
-            <div className="px-4 py-2 space-y-1">
-              <Link href="/" className="block px-3 py-2 text-gray-700 hover:text-orange-600">
-                Home
-              </Link>
-              <Link href="/products" className="block px-3 py-2 text-gray-700 hover:text-orange-600">
-                Products
-              </Link>
-              <Link href="/bulk-orders" className="block px-3 py-2 text-gray-700 hover:text-orange-600">
-                Bulk Orders
-              </Link>
-              <Link href="/about" className="block px-3 py-2 text-gray-700 hover:text-orange-600">
-                About SAIL
-              </Link>
-              <div className="pt-4 border-t">
-                <button 
-                  onClick={() => router.push('/auth?mode=login')}
-                  className="w-full mb-2 flex items-center justify-center text-gray-700 
-                    hover:text-orange-600 transition-colors"
-                >
-                  <LogIn className="w-5 h-5 mr-1" />
-                  Login
-                </button>
-                <button 
-                  onClick={() => router.push('/auth?mode=signup')}
-                  className="w-full bg-gradient-to-r from-orange-600 to-red-700 text-white 
-                    px-6 py-2 rounded-full hover:from-orange-700 hover:to-red-800 transition-all"
-                >
-                  Sign Up
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
+      <Header/>
 
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -453,71 +300,130 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredProducts.map((product) => (
-              <div
-                key={product.id}
-                className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+  {featuredProducts.map((product) => (
+    <div
+      key={product.id}
+      className="group relative bg-white/80 backdrop-blur-sm rounded-3xl overflow-hidden border border-gray-100/50 hover:border-gray-200 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] hover:-translate-y-1"
+    >
+      {/* Product Image Container */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100/50">
+        <div className="aspect-square relative">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover transition-all duration-700 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+          />
+          
+          {/* Gradient overlay on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+        
+        {/* Floating badges */}
+        <div className="absolute top-4 right-4 flex flex-col gap-2">
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm">
+            Factory Direct
+          </div>
+        </div>
+        
+        <div className="absolute top-4 left-4">
+          <div className="bg-gradient-to-r from-orange-500 to-amber-600 text-white px-2.5 py-1 rounded-lg text-xs font-medium shadow-md">
+            ISI Certified
+          </div>
+        </div>
+
+        {/* Quick action buttons - appear on hover */}
+        <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+          <button className="bg-white/90 backdrop-blur-sm p-2.5 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200">
+            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </button>
+          <button className="bg-white/90 backdrop-blur-sm p-2.5 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200">
+            <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      {/* Product Details */}
+      <div className="p-5">
+        {/* Brand */}
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-1 rounded-full tracking-wide uppercase">
+            {product.brand}
+          </span>
+          <div className="flex items-center gap-1">
+            <svg className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span className="text-xs font-medium text-gray-600">{product.rating}</span>
+          </div>
+        </div>
+        
+        {/* Product Name */}
+        <h3 className="font-bold text-gray-900 mb-2 leading-tight group-hover:text-orange-600 transition-colors duration-200 line-clamp-2">
+          {product.name}
+        </h3>
+        
+        {/* Specifications */}
+        <p className="text-xs text-gray-500 mb-3 line-clamp-2 leading-relaxed">
+          {product.specifications}
+        </p>
+        
+        {/* Reviews */}
+        <div className="flex items-center mb-4">
+          <div className="flex items-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <svg 
+                key={i} 
+                className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-200'}`} 
+                fill="currentColor" 
+                viewBox="0 0 20 20"
               >
-                <div className="relative overflow-hidden">
-                  <div className="relative w-full h-48">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    />
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold transform -rotate-3 shadow-lg">
-                      Factory Direct
-                    </div>
-                  </div>
-                  <div className="absolute top-4 left-4">
-                    <div className="bg-orange-600 text-white px-2 py-1 rounded text-xs font-medium">
-                      ISI Certified
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="p-6">
-                  <p className="text-sm text-orange-600 font-medium mb-2">{product.brand}</p>
-                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">
-                    {product.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-3">{product.specifications}</p>
-                  
-                  <div className="flex items-center mb-3">
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <svg key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-600 ml-2">({product.reviews})</span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-700 bg-clip-text text-transparent">{product.price}</span>
-                      <span className="text-sm text-gray-500 line-through">{product.originalPrice}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <button className="w-full bg-gradient-to-r from-orange-600 to-red-700 text-white py-3 rounded-xl font-semibold hover:from-orange-700 hover:to-red-800 transition-all transform hover:scale-105 group-hover:shadow-lg">
-                      Add to Cart
-                    </button>
-                    <button className="w-full border border-orange-600 text-orange-600 py-2 rounded-xl font-medium hover:bg-orange-50 transition-all">
-                      Get Bulk Quote
-                    </button>
-                  </div>
-                </div>
-              </div>
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
             ))}
           </div>
+          <span className="text-xs text-gray-400 ml-2">({product.reviews})</span>
+        </div>
+        
+        {/* Pricing */}
+        <div className="flex items-baseline gap-2 mb-4">
+          <span className="text-xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent">
+            {product.price}
+          </span>
+          <span className="text-sm text-gray-400 line-through">
+            {product.originalPrice}
+          </span>
+          <div className="ml-auto">
+            <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+              Save {Math.round(((parseFloat(product.originalPrice.replace('₹', '').replace(',', '')) - parseFloat(product.price.replace('₹', '').replace(',', ''))) / parseFloat(product.originalPrice.replace('₹', '').replace(',', ''))) * 100)}%
+            </span>
+          </div>
+        </div>
+        
+        {/* Action Buttons */}
+        <div className="space-y-2">
+          <button className="w-full bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 text-white py-3 rounded-2xl font-semibold text-sm shadow-lg hover:shadow-xl hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-[1.02] active:scale-95">
+            Add to Cart
+          </button>
+          <button className="w-full border border-gray-200 text-gray-700 py-2.5 rounded-2xl font-medium text-sm hover:bg-gray-50 hover:border-gray-300 transition-all duration-200">
+            Get Bulk Quote
+          </button>
+        </div>
+      </div>
+      
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-orange-600/5 via-red-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+    </div>
+  ))}
+</div>
         </div>
       </section>
 
@@ -606,7 +512,7 @@ export default function Home() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-24 bg-slate-900 relative overflow-hidden">
+      <section className="py-12 bg-slate-900 relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
@@ -625,18 +531,11 @@ export default function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <div className="flex-1 relative">
                 <input
                   type="email"
                   placeholder="Enter your business email"
                   className="w-full px-6 py-4 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
                 />
-                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
               <button className="bg-orange-500 hover:bg-orange-400 text-white px-8 py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20 active:scale-100">
                 Subscribe
               </button>
@@ -670,89 +569,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-12 h-10 bg-gradient-to-r from-orange-600 to-red-700 rounded flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">SAIL</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xl font-bold">SAIL Steel</span>
-                  <span className="text-xs text-gray-400">Ministry of Steel, Govt. of India</span>
-                </div>
-              </div>
-              <p className="text-gray-400 mb-6">
-                India&lsquo;s largest steel producer, committed to providing quality steel products directly to consumers and businesses.
-              </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
-                </a>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-6">Products</h3>
-              <ul className="space-y-4 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Structural Steel</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Steel Sheets & Plates</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">TMT Bars</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Steel Pipes & Tubes</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Wire Products</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-6">Services</h3>
-              <ul className="space-y-4 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Bulk Orders</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Custom Steel Solutions</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Technical Support</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Quality Certification</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Logistics Support</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-6">Company</h3>
-              <ul className="space-y-4 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">About SAIL</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Our Plants</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Sustainability</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Investor Relations</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-12 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <p className="text-gray-400 mb-4 md:mb-0">
-                &copy; 2025 Steel Authority of India Limited (SAIL). All rights reserved.
-              </p>
-              <div className="flex space-x-6 text-sm text-gray-400">
-                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" className="hover:text-white transition-colors">Terms & Conditions</a>
-                <a href="#" className="hover:text-white transition-colors">Quality Policy</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 }

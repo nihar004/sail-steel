@@ -1,24 +1,22 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
-export async function middleware(request) {
-  // Await cookies().get()
-  const session = await cookies().get('session');
+export function middleware(request) {
+  const session = request.cookies.get('session');
   const isAuthPage = request.nextUrl.pathname.startsWith('/auth');
 
-  // Public paths that don't require authentication
+  // Define public routes
   const publicPaths = ['/', '/auth', '/about', '/products'];
-  const isPublicPath = publicPaths.some(path => 
+  const isPublicPath = publicPaths.some(path =>
     request.nextUrl.pathname.startsWith(path)
   );
 
-  // No session and trying to access protected route
-  if (!session?.value && !isPublicPath) {
+  // Redirect unauthenticated user from protected routes
+  if (!session && !isPublicPath) {
     return NextResponse.redirect(new URL('/auth', request.url));
   }
 
-  // Has session and trying to access auth page
-  if (session?.value && isAuthPage) {
+  // Redirect authenticated user away from auth pages
+  if (session && isAuthPage) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 

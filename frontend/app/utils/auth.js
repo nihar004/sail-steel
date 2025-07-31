@@ -3,19 +3,20 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   sendPasswordResetEmail,
-  updateProfile
+  updateProfile,
+  fetchSignInMethodsForEmail
 } from 'firebase/auth';
-import { auth, googleProvider } from '@/app/lib/firebase'; // Adjust the import path as necessary
+import { auth, googleProvider } from '@/app/utils/firebase';
 
 export const registerWithEmail = async (email, password, userData) => {
   try {
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
-    // Update profile with additional data
+
     await updateProfile(user, {
       displayName: `${userData.firstName} ${userData.lastName}`
     });
-    
-    // Store additional user data in Firestore
+
+    // You can store this data later in your own PostgreSQL via API
     const userDoc = {
       uid: user.uid,
       email: user.email,
@@ -26,9 +27,6 @@ export const registerWithEmail = async (email, password, userData) => {
       businessType: userData.businessType,
       createdAt: new Date().toISOString()
     };
-
-    // You'll need to set up Firestore and create a users collection
-    // await setDoc(doc(db, 'users', user.uid), userDoc);
 
     return { user, userData: userDoc };
   } catch (error) {
@@ -56,6 +54,13 @@ export const loginWithGoogle = async () => {
 
 export const resetPassword = async (email) => {
   try {
+    // First check if email exists
+    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+    
+    if (signInMethods.length === 0) {
+      throw new Error('No account found with this email address');
+    }
+
     await sendPasswordResetEmail(auth, email);
     return true;
   } catch (error) {

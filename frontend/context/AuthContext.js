@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '@/app/lib/firebase';
+import { auth } from '@/app/utils/firebase';
 
 const AuthContext = createContext();
 
