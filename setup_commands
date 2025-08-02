@@ -18,34 +18,7 @@ npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --
 npm install axios react-hook-form @hookform/resolvers zod lucide-react @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-toast js-cookie @types/js-cookie react-query @tanstack/react-query
 
 # 5. Setup Backend (Node.js + Express)
-cd ../backend
+mkdir backend
+cd backend
 npm init -y
-
-# Install backend dependencies
-npm install express cors helmet morgan bcryptjs jsonwebtoken dotenv multer sqlite3 express-validator express-rate-limit cookie-parser compression
-
-# Install development dependencies
-npm install -D nodemon @types/node typescript ts-node concurrently
-
-# 6. Create backend TypeScript config
-npx tsc --init
-
-# 7. Setup database directory
-cd ../database
-
-# Create initial SQL files
-touch schema.sql seeds.sql
-
-# 8. Go back to root and create Docker setup
-cd ..
-touch docker-compose.yml .env.example .gitignore README.md
-
-# 9. Create package.json scripts for root directory
-# (This will be added manually in the artifact below)
-
-echo "Project structure created successfully!"
-echo "Next steps:"
-echo "1. Copy the folder structure from the artifact below"
-echo "2. Configure environment variables"
-echo "3. Set up the database schema"
-echo "4. Start development servers"
+npm install express pg cors dotenv

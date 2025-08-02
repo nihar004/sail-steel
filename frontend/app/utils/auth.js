@@ -4,7 +4,8 @@ import {
   signInWithPopup,
   sendPasswordResetEmail,
   updateProfile,
-  fetchSignInMethodsForEmail
+  fetchSignInMethodsForEmail,
+  signOut
 } from 'firebase/auth';
 import { auth, googleProvider } from '@/app/utils/firebase';
 
@@ -36,10 +37,34 @@ export const registerWithEmail = async (email, password, userData) => {
 
 export const loginWithEmail = async (email, password) => {
   try {
+    // First authenticate with Firebase
     const result = await signInWithEmailAndPassword(auth, email, password);
+    
+    // Then check user status in your database
+    const response = await fetch('http://localhost:5000/auth/check-admin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firebaseUid: result.user.uid,
+      }),
+    });
+
+    const data = await response.json();
+
+    // If user is not active, sign them out and throw error
+    if (!data.isActive) {
+      await signOut(auth);
+      throw new Error('Your account has been deactivated. Please contact support.');
+    }
+
     return result;
   } catch (error) {
-    throw error;
+    if (error.message.includes('deactivated')) {
+      throw error;
+    }
+    throw new Error('Invalid email or password');
   }
 };
 

@@ -12,7 +12,6 @@ import { useState,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import { checkAdminStatus } from '../utils/api';
 
 export default function Header() {
   const { getCartCount } = useCart();
@@ -22,8 +21,6 @@ export default function Header() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [adminCheckComplete, setAdminCheckComplete] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,27 +28,6 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    const verifyAdminStatus = async () => {
-      if (user?.uid) {
-        try {
-          const adminStatus = await checkAdminStatus(user.uid);
-          setIsAdmin(adminStatus);
-        } catch (error) {
-          console.error('Error verifying admin status:', error);
-          setIsAdmin(false);
-        } finally {
-          setAdminCheckComplete(true);
-        }
-      } else {
-        setIsAdmin(false);
-        setAdminCheckComplete(true);
-      }
-    };
-
-    verifyAdminStatus();
-  }, [user]);
 
   // Steel categories mapping
   const categories = [
@@ -99,34 +75,6 @@ export default function Header() {
     }
   ];
 
-  // Add this to both desktop and mobile navigation
-  const renderAdminLink = () => {
-    if (user && isAdmin && adminCheckComplete) {
-      return (
-        <Link 
-          href="/admin" 
-          className="text-gray-700 hover:text-orange-600 font-medium transition-colors flex items-center space-x-1"
-        >
-          <svg 
-            className="w-4 h-4" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" 
-            />
-          </svg>
-          <span>Admin</span>
-        </Link>
-      );
-    }
-    return null;
-  };
-
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${
       scrollY > 100 ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-md'
@@ -170,8 +118,6 @@ export default function Header() {
             <Link href="/contact" className="text-gray-700 hover:text-orange-600 font-medium transition-colors">
               Contact
             </Link>
-
-            {renderAdminLink()}
           </nav>
 
           {/* Right side */}

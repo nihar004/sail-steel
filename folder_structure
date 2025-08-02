@@ -1,0 +1,9 @@
+steel-admin-dashboard/
+├── backend/
+│   ├── db/                     # Database connection and queries
+│   ├── routes/                 # All Express API routes
+│   ├── controllers/            # Logic for handling each route
+│   ├── models/                 # SQL queries or ORM (optional)
+│   ├── middleware/             # Auth, error handling, etc.
+│   ├── server.js               # Express app entry point
+│   └── .env                    # DB credentials, port, etc.
