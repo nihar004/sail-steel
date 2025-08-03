@@ -4,13 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  Search, 
-  Menu, 
-  UserCircle2,
-  LogIn,
-  ShoppingBag,
-  PhoneCall,
-  ChevronDown,
   Check, 
   Building2, 
   Star, 
@@ -19,6 +12,7 @@ import {
 } from 'lucide-react';
 import Footer from "./components/Footer";
 import Header from './components/Header';
+import { getPublicCategories } from './utils/api';
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -45,50 +39,22 @@ export default function Home() {
   ];
 
   // Steel categories mapping
-  const categories = [
-    {
-      name: "Structural Steel",
-      image: "/structural_steel.jpg",
-      count: "500+ products",
-      description: "I-beams, H-beams, channels, and angles for construction",
-      slug: "structural-steel"
-    },
-    {
-      name: "Steel Sheets & Plates",
-      image: "/steel_sheets.jpg", 
-      count: "300+ products",
-      description: "Hot rolled, cold rolled, and galvanized sheets",
-      slug: "sheets-plates"
-    },
-    {
-      name: "Steel Bars & Rods",
-      image: "/steel_bars.jpg",
-      count: "250+ products", 
-      description: "TMT bars, round bars, and reinforcement steel",
-      slug: "bars-rods"
-    },
-    {
-      name: "Steel Pipes & Tubes",
-      image: "/steel_pipes.jpg",
-      count: "400+ products",
-      description: "ERW pipes, seamless tubes, and hollow sections",
-      slug: "pipes-tubes"
-    },
-    {
-      name: "Wire & Wire Products",
-      image: "/steel_wire.jpg",
-      count: "150+ products",
-      description: "Binding wire, mesh, and specialty wire products",
-      slug: "wire-products"
-    },
-    {
-      name: "Specialty Steel",
-      image: "/specialty_steel.jpg",
-      count: "200+ products",
-      description: "Stainless steel, alloy steel, and custom grades",
-      slug: "specialty-steel"
-    }
-  ];
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await getPublicCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error('Error loading categories:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadCategories();
+  }, []);
 
   const featuredProducts = [
     {
@@ -226,62 +192,75 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories Section - Simplified */}
-      <section className="py-20 bg-white">
+      {/* Categories Section - Enhanced Design */}
+      <section className="py-24 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Our Product Range</h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Complete range of steel products for construction and manufacturing
+          <div className="text-center mb-16">
+            <span className="bg-orange-100 text-orange-600 text-sm font-medium px-4 py-2 rounded-full inline-block mb-4">
+              Explore Our Range
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Premium Steel Categories
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Browse through our comprehensive range of high-quality steel products
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {categories.map((category, index) => (
-              <Link 
-                href={`/products?category=${category.slug}`}
-                key={index}
-                className="group bg-white rounded-lg border border-gray-200 hover:border-orange-500 transition-all duration-300 overflow-hidden"
-              >
-                <div className="aspect-w-16 aspect-h-9 relative">
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/75 to-transparent"></div>
+          {isLoading ? (
+            // Loading skeleton
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded-t-2xl"></div>
+                  <div className="p-6 bg-white rounded-b-2xl border border-gray-100">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                  </div>
                 </div>
-                
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {categories.map((category) => (
+                <Link 
+                  href={`/products?category=${category.slug}`}
+                  key={category.category_id}
+                  className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-orange-200"
+                >
+
+                  {/* Category Content */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors mb-2">
                       {category.name}
                     </h3>
-                    <span className="text-sm text-orange-600 font-medium">
-                      {category.count}
-                    </span>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {category.description}
+                    </p>
+                    
+                    {/* Action Button */}
+                    <div className="flex items-center text-orange-600 font-medium text-sm">
+                      Browse Products
+                      <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+                    </div>
                   </div>
-                  <p className="text-gray-600 text-sm mb-4">
-                    {category.description}
-                  </p>
-                  <div className="flex items-center text-sm text-orange-600 font-medium">
-                    View Products
-                    <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
 
+                  {/* Hover Effect Overlay */}
+                  <div className="absolute inset-0 border-2 border-orange-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* View All Button */}
           <div className="text-center mt-12">
             <Link 
               href="/products" 
-              className="inline-flex items-center px-6 py-3 border-2 border-orange-600 text-orange-600 font-medium rounded-lg hover:bg-orange-50 transition-colors"
+              className="inline-flex items-center px-8 py-4 border-2 border-orange-600 text-orange-600 font-semibold rounded-full hover:bg-orange-50 transition-all duration-300 transform hover:scale-105"
             >
               View All Products
-              <ChevronRight className="w-4 h-4 ml-2" />
+              <ChevronRight className="w-5 h-5 ml-2" />
             </Link>
           </div>
         </div>
@@ -361,7 +340,7 @@ export default function Home() {
           <div className="flex items-center gap-1">
             <svg className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
+          </svg>
             <span className="text-xs font-medium text-gray-600">{product.rating}</span>
           </div>
         </div>
@@ -512,10 +491,10 @@ export default function Home() {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-12 bg-slate-900 relative overflow-hidden">
+      <section className="py-10 bg-slate-900 relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+          <div className="absolute inset-0 bg-[url('/design.svg')] bg-center"></div>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

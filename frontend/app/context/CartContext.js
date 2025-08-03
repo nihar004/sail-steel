@@ -11,12 +11,7 @@ export function CartProvider({ children }) {
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
-      try {
-        setCartItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Error parsing cart data:', error);
-        localStorage.removeItem('cart');
-      }
+      setCartItems(JSON.parse(savedCart));
     }
   }, []);
 
@@ -27,30 +22,39 @@ export function CartProvider({ children }) {
 
   const addToCart = (product) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
+      // Check if product already exists in cart
+      const existingItem = prevItems.find(item => item.product_id === product.product_id);
+      
       if (existingItem) {
+        // If exists, update quantity
         return prevItems.map(item =>
-          item.id === product.id
+          item.product_id === product.product_id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
+      
+      // If doesn't exist, add new item with quantity 1
       return [...prevItems, { ...product, quantity: 1 }];
     });
+    
+    return true; // Return success
   };
 
   const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+    setCartItems(prevItems => 
+      prevItems.filter(item => item.product_id !== productId)
+    );
   };
 
-  const updateQuantity = (productId, newQuantity) => {
-    if (newQuantity === 0) {
-      removeFromCart(productId);
-      return;
-    }
+  const updateQuantity = (productId, quantity) => {
+    if (quantity < 1) return;
+    
     setCartItems(prevItems =>
       prevItems.map(item =>
-        item.id === productId ? { ...item, quantity: newQuantity } : item
+        item.product_id === productId
+          ? { ...item, quantity }
+          : item
       )
     );
   };
@@ -62,23 +66,16 @@ export function CartProvider({ children }) {
 
   const getCartTotal = () => {
     return cartItems.reduce((total, item) => {
-      const price = typeof item.price === 'string' 
-        ? parseFloat(item.price.replace('₹', '').replace(',', '')) 
-        : item.price;
-      return total + (price * item.quantity);
+      return total + (item.price_per_unit * item.quantity);
     }, 0);
-  };
-
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0
-    }).format(price);
   };
 
   const getCartCount = () => {
     return cartItems.reduce((count, item) => count + item.quantity, 0);
+  };
+
+  const formatPrice = (price) => {
+    return `₹${price?.toLocaleString('en-IN')}`;
   };
 
   return (

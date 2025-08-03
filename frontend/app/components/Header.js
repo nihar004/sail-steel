@@ -7,6 +7,7 @@ import {
   LogIn,
   ShoppingBag,
   ChevronDown,
+  ChevronRight,
 } from 'lucide-react';
 import { useState,useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -24,6 +25,7 @@ export default function Header() {
   const [scrollY, setScrollY] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminCheckComplete, setAdminCheckComplete] = useState(false);
+  const [categories, setCategories] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -53,51 +55,27 @@ export default function Header() {
     verifyAdminStatus();
   }, [user]);
 
-  // Steel categories mapping
-  const categories = [
-    {
-      name: "Structural Steel",
-      image: "/structural_steel.jpg",
-      count: "500+ products",
-      description: "I-beams, H-beams, channels, and angles for construction",
-      slug: "structural-steel"
-    },
-    {
-      name: "Steel Sheets & Plates",
-      image: "/steel_sheets.jpg", 
-      count: "300+ products",
-      description: "Hot rolled, cold rolled, and galvanized sheets",
-      slug: "sheets-plates"
-    },
-    {
-      name: "Steel Bars & Rods",
-      image: "/steel_bars.jpg",
-      count: "250+ products", 
-      description: "TMT bars, round bars, and reinforcement steel",
-      slug: "bars-rods"
-    },
-    {
-      name: "Steel Pipes & Tubes",
-      image: "/steel_pipes.jpg",
-      count: "400+ products",
-      description: "ERW pipes, seamless tubes, and hollow sections",
-      slug: "pipes-tubes"
-    },
-    {
-      name: "Wire & Wire Products",
-      image: "/steel_wire.jpg",
-      count: "150+ products",
-      description: "Binding wire, mesh, and specialty wire products",
-      slug: "wire-products"
-    },
-    {
-      name: "Specialty Steel",
-      image: "/specialty_steel.jpg",
-      count: "200+ products",
-      description: "Stainless steel, alloy steel, and custom grades",
-      slug: "specialty-steel"
-    }
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/categories');
+        const data = await response.json();
+        // Transform the data to match the dropdown format
+        const formattedCategories = data.map(category => ({
+          name: category.name,
+          image: `/categories/${category.slug}.jpg`, // Make sure you have these images
+          count: `${category.product_count}+ products`,
+          description: category.description,
+          slug: category.slug
+        }));
+        setCategories(formattedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Add this to both desktop and mobile navigation
   const renderAdminLink = () => {
@@ -154,10 +132,10 @@ export default function Header() {
                 Products
                 <ChevronDown className="w-4 h-4 ml-1" />
               </button>
-              <div className="absolute top-full left-0 w-64 bg-white shadow-lg rounded-lg py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
-                {categories.map((category, index) => (
+              <div className="absolute top-full left-0 w-48 bg-white shadow-lg rounded-lg py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
+                {categories.map((category) => (
                   <Link 
-                    key={index}
+                    key={category.slug}
                     href={`/products?category=${category.slug}`}
                     className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors"
                   >

@@ -243,3 +243,66 @@ export const deleteProduct = async (productId) => {
     throw error;
   }
 };
+
+// Add or update this function
+export const getPublicCategories = async () => {
+  try {
+    const response = await fetch('http://localhost:5000/categories');
+    if (!response.ok) throw new Error('Failed to fetch categories');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
+  }
+};
+
+// Add this function
+export const getPublicProducts = async () => {
+  try {
+    const response = await fetch('http://localhost:5000/products');
+    if (!response.ok) throw new Error('Failed to fetch products');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching public products:', error);
+    throw error;
+  }
+};
+
+// Add this new function
+export const createUser = async (userData) => {
+  try {
+    console.log('Creating user with data:', userData);
+
+    // Ensure all required fields have default values
+    const userDataWithDefaults = {
+      firebase_uid: userData.firebase_uid,
+      email: userData.email,
+      firstName: userData.firstName || 'User',
+      lastName: userData.lastName || '',
+      phone: userData.phone || '0000000000',
+      company: userData.company || '',
+      gst_number: userData.gst_number || null
+    };
+
+    const response = await fetch('http://localhost:5000/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userDataWithDefaults),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Server error:', data);
+      throw new Error(data.details || 'Failed to create user');
+    }
+
+    console.log('User created successfully:', data);
+    return data;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+};

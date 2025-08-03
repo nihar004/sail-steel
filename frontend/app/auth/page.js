@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { registerWithEmail, loginWithEmail, loginWithGoogle, resetPassword } from '../utils/auth';
 import toast from 'react-hot-toast';
+import { createUser } from '../utils/api';
 
 export default function AuthPage() {
   const searchParams = useSearchParams();
@@ -48,6 +49,7 @@ export default function AuthPage() {
     }));
   };
 
+  // Update the handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -57,24 +59,46 @@ export default function AuthPage() {
         toast.success('Successfully logged in!');
         router.push('/');
       } else {
-        // Validate passwords match
+        // Validate password match
         if (formData.password !== formData.confirmPassword) {
-          return toast.error('Passwords do not match');
+          toast.error('Passwords do not match');
+          return;
         }
-        
-        await registerWithEmail(formData.email, formData.password, {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          company: formData.company,
-          phone: formData.phone,
-          businessType: formData.businessType
-        });
-        
-        toast.success('Account created successfully!');
-        router.push('/');
+
+        // Register with Firebase
+        const firebaseUser = await registerWithEmail(
+          formData.email, 
+          formData.password,
+          {
+            firstName: formData.firstName,
+            lastName: formData.lastName
+          }
+        );
+
+        // Create user in SQL database
+        try {
+          await createUser({
+            firebase_uid: firebaseUser.uid,
+            email: formData.email,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            company: formData.company,
+            gst_number: formData.businessType === 'trader' ? formData.gstNumber : null
+          });
+
+          toast.success('Account created successfully!');
+          router.push('/');
+        } catch (dbError) {
+          // If database creation fails, delete the Firebase user
+          console.error('Database creation error:', dbError);
+          await firebaseUser.delete();
+          throw new Error('Failed to create user profile. Please try again.');
+        }
       }
     } catch (error) {
-      toast.error(error.message);
+      console.error('Authentication error:', error);
+      toast.error(error.message || 'Failed to create account');
     }
   };
 

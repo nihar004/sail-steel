@@ -8,29 +8,22 @@ import {
   signOut
 } from 'firebase/auth';
 import { auth, googleProvider } from '@/app/utils/firebase';
+import { createUser } from '@/app/utils/api';
 
 export const registerWithEmail = async (email, password, userData) => {
   try {
+    // First create Firebase user
     const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
+    // Update Firebase profile
     await updateProfile(user, {
       displayName: `${userData.firstName} ${userData.lastName}`
     });
 
-    // You can store this data later in your own PostgreSQL via API
-    const userDoc = {
-      uid: user.uid,
-      email: user.email,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      company: userData.company || '',
-      phone: userData.phone,
-      businessType: userData.businessType,
-      createdAt: new Date().toISOString()
-    };
-
-    return { user, userData: userDoc };
+    // Return the Firebase user
+    return user;
   } catch (error) {
+    console.error('Firebase registration error:', error);
     throw error;
   }
 };
@@ -71,8 +64,40 @@ export const loginWithEmail = async (email, password) => {
 export const loginWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
+    
+    // Split the display name into first and last name
+    const nameParts = result.user.displayName?.split(' ') || ['', ''];
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ');
+    
+    // Extract user info from Google result with required fields
+    const userData = {
+      firebase_uid: result.user.uid,
+      email: result.user.email,
+      firstName: firstName || 'User', // Fallback if no first name
+      lastName: lastName || '', // Fallback if no last name
+      phone: result.user.phoneNumber || '0000000000', // Default phone number
+      company: '', // Default empty company
+      gst_number: null // Default null GST
+    };
+
+    try {
+      // Check if user already exists in our database
+      const response = await fetch(`http://localhost:5000/users/check/${result.user.uid}`);
+      const exists = await response.json();
+
+      if (!exists.found) {
+        // If user doesn't exist, create them
+        await createUser(userData);
+      }
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      throw new Error('Failed to create user profile');
+    }
+
     return result;
   } catch (error) {
+    console.error('Google sign in error:', error);
     throw error;
   }
 };

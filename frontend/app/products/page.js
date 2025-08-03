@@ -3,198 +3,14 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { Grid, List, Star, Filter, Search, TrendingUp, Shield, Zap, Truck } from 'lucide-react';
+import { Grid, List, Star,ShoppingCart, Filter,Package,  Search, TrendingUp, Shield, Zap, Truck, ChevronLeft, ChevronRight, FileText, FileBadge, Award } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { getPublicProducts, getPublicCategories } from '../utils/api';
+import DocumentViewer from '../components/DocumentViewer';
 
-// Steel products data
-const steelProducts = {
-  categories: [
-    {
-      id: 1,
-      name: "Structural Steel",
-      slug: "structural-steel",
-      icon: "🏗️",
-      description: "High-strength structural components for construction",
-      totalProducts: 150,
-      image: "/steel-warehouse.jpg",
-      products: [
-        {
-          id: 101,
-          name: "I-Beam H200x200x8/12",
-          brand: "SteelCorp",
-          price: 45000,
-          originalPrice: 52000,
-          currency: "₹",
-          image: "/steel-warehouse.jpg",
-          rating: 4.8,
-          reviews: 45,
-          inStock: true,
-          partNumber: "IB-H200-8-12",
-          specifications: {
-            "height": "200mm",
-            "width": "200mm",
-            "thickness": "8-12mm",
-            "length": "6m standard"
-          },
-          features: [
-            "High tensile strength",
-            "Weldable construction",
-            "Corrosion resistant",
-            "CE certified"
-          ],
-          category: "structural-steel",
-          tags: ["I-beam", "structural", "construction", "H200"]
-        },
-        {
-          id: 102,
-          name: "Steel Plate Q345 20mm",
-          brand: "MetalMax",
-          price: 85000,
-          originalPrice: 95000,
-          currency: "₹",
-          image: "/steel-warehouse-2.jpg",
-          rating: 4.9,
-          reviews: 32,
-          inStock: true,
-          partNumber: "SP-Q345-20",
-          specifications: {
-            "thickness": "20mm",
-            "grade": "Q345",
-            "width": "2000mm",
-            "length": "6000mm"
-          },
-          features: [
-            "High yield strength",
-            "Excellent weldability",
-            "Impact resistant",
-            "ASTM certified"
-          ],
-          category: "structural-steel",
-          tags: ["steel plate", "Q345", "20mm", "structural"]
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: "Steel Pipes & Tubes",
-      slug: "pipes-tubes",
-      icon: "🔧",
-      description: "Seamless and welded pipes for various applications",
-      totalProducts: 200,
-      image: "/steel-warehouse.jpg",
-      products: [
-        {
-          id: 201,
-          name: "Seamless Steel Pipe 6\" SCH40",
-          brand: "PipePro",
-          price: 125000,
-          originalPrice: 140000,
-          currency: "₹",
-          image: "/steel-warehouse-2.jpg",
-          rating: 4.7,
-          reviews: 28,
-          inStock: true,
-          partNumber: "SSP-6-SCH40",
-          specifications: {
-            "diameter": "6 inches",
-            "schedule": "SCH40",
-            "thickness": "7.11mm",
-            "length": "6m standard"
-          },
-          features: [
-            "Seamless construction",
-            "High pressure rating",
-            "Corrosion resistant",
-            "API 5L certified"
-          ],
-          category: "pipes-tubes",
-          tags: ["seamless", "pipe", "SCH40", "6 inch"]
-        }
-      ]
-    },
-    {
-      id: 3,
-      name: "Steel Sheets & Coils",
-      slug: "sheets-coils",
-      icon: "📦",
-      description: "Hot and cold rolled steel sheets and coils",
-      totalProducts: 180,
-      image: "/steel-warehouse.jpg",
-      products: [
-        {
-          id: 301,
-          name: "Cold Rolled Steel Sheet 1.5mm",
-          brand: "SheetMetal",
-          price: 65000,
-          originalPrice: 72000,
-          currency: "₹",
-          image: "/steel-warehouse-2.jpg",
-          rating: 4.6,
-          reviews: 41,
-          inStock: true,
-          partNumber: "CRSS-1.5",
-          specifications: {
-            "thickness": "1.5mm",
-            "width": "1250mm",
-            "length": "2500mm",
-            "grade": "SPCC"
-          },
-          features: [
-            "Smooth surface finish",
-            "Precise thickness",
-            "Excellent formability",
-            "JIS standard"
-          ],
-          category: "sheets-coils",
-          tags: ["cold rolled", "sheet", "1.5mm", "SPCC"]
-        }
-      ]
-    },
-    {
-      id: 4,
-      name: "Steel Angles & Channels",
-      slug: "angles-channels",
-      icon: "📐",
-      description: "Structural angles and channels for framing",
-      totalProducts: 120,
-      image: "/steel-warehouse.jpg",
-      products: [
-        {
-          id: 401,
-          name: "Steel Angle 50x50x5mm",
-          brand: "AngleSteel",
-          price: 35000,
-          originalPrice: 40000,
-          currency: "₹",
-          image: "/steel-warehouse-2.jpg",
-          rating: 4.5,
-          reviews: 35,
-          inStock: true,
-          partNumber: "SA-50-50-5",
-          specifications: {
-            "legs": "50x50mm",
-            "thickness": "5mm",
-            "length": "6m standard",
-            "grade": "S235JR"
-          },
-          features: [
-            "Equal leg angle",
-            "Hot rolled finish",
-            "Weldable material",
-            "EN 10025-2 certified"
-          ],
-          category: "angles-channels",
-          tags: ["angle", "50x50", "5mm", "structural"]
-        }
-      ]
-    }
-  ]
-};
-
-// Create a wrapper component that uses searchParams
 function ProductsContent() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get('category');
@@ -205,8 +21,9 @@ function ProductsContent() {
   const [selectedBrand, setSelectedBrand] = useState('all');
   const [priceRange, setPriceRange] = useState([0, 200000]);
   const [sortBy, setSortBy] = useState('featured');
-  const [viewMode, setViewMode] = useState('grid');
-  const [showFilters, setShowFilters] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Set initial category from URL when component mounts
   useEffect(() => {
@@ -215,26 +32,207 @@ function ProductsContent() {
     }
   }, [categoryFromUrl]);
 
+  // Fetch products and categories
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [productsData, categoriesData] = await Promise.all([
+          getPublicProducts(),
+          getPublicCategories()
+        ]);
+        setProducts(productsData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        toast.error('Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Product Card Component with Image Slider
+  const ProductCard = ({ product }) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [selectedDocument, setSelectedDocument] = useState(null);
+    const images = product.images || [];
+
+    const getDocumentIcon = (type) => {
+      switch (type.toLowerCase()) {
+        case 'mtr':
+          return <FileBadge className="w-4 h-4" />;
+        case 'certificate':
+          return <Award className="w-4 h-4" />;
+        default:
+          return <FileText className="w-4 h-4" />;
+      }
+    };
+
+    // Update the handleAddToCart function in ProductCard
+    const handleAddToCart = (e) => {
+      e.preventDefault();
+      e.stopPropagation();  // Add this line to stop event bubbling
+      console.log('Adding product to cart:', product);
+      const success = addToCart(product);
+      if (success) {
+        toast.success('Added to cart!');
+      } else {
+        toast.error('Failed to add to cart');
+      }
+    };
+
+    return (
+      <>
+        <div 
+          className="group bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          {/* Image Container */}
+          <div className="relative aspect-square overflow-hidden bg-gray-50">
+            {images.length > 0 ? (
+              <>
+                <Image
+                  src={images[currentImageIndex].image_path}
+                  alt={images[currentImageIndex].alt_text || product.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                {images.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1">
+                    {images.map((_, index) => (
+                      <button
+                        type="button"
+                        key={index}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setCurrentImageIndex(index);
+                        }}
+                        className={`w-2 h-2 rounded-full transition-colors ${
+                          index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="h-full flex items-center justify-center">
+                <Package className="w-12 h-12 text-gray-300" />
+              </div>
+            )}
+            
+            {/* Quick Actions */}
+            <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex justify-between items-center">
+                <p className="text-white font-medium truncate">{product.name}</p>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const success = addToCart(product);
+                    if (success) {
+                      toast.success('Added to cart!');
+                    } else {
+                      toast.error('Failed to add to cart');
+                    }
+                  }}
+                  className="ml-2 p-2 bg-white rounded-full hover:bg-blue-50 transition-colors"
+                >
+                  <ShoppingCart className="w-4 h-4 text-blue-600" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-4">
+            {product.category && (
+              <span className="text-xs font-medium text-blue-600 mb-2 block">
+                {product.category.name}
+              </span>
+            )}
+            
+            <h3 className="font-semibold text-gray-900 mb-1 line-clamp-1">
+              {product.name}
+            </h3>
+            
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="text-lg font-bold text-gray-900">
+                ₹{product.price_per_unit?.toLocaleString('en-IN')}
+              </span>
+              <span className="text-sm text-gray-500">
+                /{product.unit_of_measure}
+              </span>
+            </div>
+
+            {/* Documents */}
+            {product.documents?.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {product.documents.map((doc) => (
+                  <button
+                    type="button"
+                    key={doc.document_id}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedDocument(doc);
+                    }}
+                    className="inline-flex items-center px-3 py-1.5 rounded-lg bg-gray-50 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    {getDocumentIcon(doc.document_type)}
+                    <span className="ml-1.5">{doc.document_type}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {selectedDocument && (
+          <DocumentViewer
+            document={selectedDocument}
+            onClose={() => setSelectedDocument(null)}
+          />
+        )}
+      </>
+    );
+  };
+
   // Get all products from all categories
-  const allProducts = steelProducts.categories.flatMap(category => 
-    category.products.map(product => ({
-      ...product,
-      categoryName: category.name
-    }))
-  );
+  const allProducts = categories?.length 
+    ? categories.flatMap(category => 
+        category.products?.map(product => ({
+          ...product,
+          categoryName: category.name
+        })) || []
+      )
+    : products; // Fallback to products array if categories is empty
 
   // Filter products based on current filters
-  const filteredProducts = allProducts.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (product.tags || []).some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredProducts = products?.filter(product => {
+    if (!product) return false;
     
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesBrand = selectedBrand === 'all' || product.brand === selectedBrand;
-    const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
+    const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (product.tags || []).some(tag => tag?.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesCategory = selectedCategory === 'all' || 
+                          product.category?.slug === selectedCategory;
+    const matchesBrand = selectedBrand === 'all' || 
+                        product.brand === selectedBrand;
+    const matchesPrice = (!product.price_per_unit || 
+                        (product.price_per_unit >= priceRange[0] && 
+                         product.price_per_unit <= priceRange[1]));
 
     return matchesSearch && matchesCategory && matchesBrand && matchesPrice;
-  });
+  }) || [];
 
   // Sort products
   const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -328,110 +326,55 @@ function ProductsContent() {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            {/* Search Bar */}
-            <div className="flex-1 max-w-md">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search steel products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
-                />
-              </div>
-            </div>
-
-            {/* Filter Toggle (Mobile) */}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="lg:hidden flex items-center justify-center px-6 py-3 bg-gray-100 rounded-xl text-gray-700 font-medium hover:bg-gray-200 transition-colors"
-            >
-              <Filter className="w-5 h-5 mr-2" />
-              Filters
-            </button>
-
-            {/* Filters */}
-            <div className={`flex flex-col lg:flex-row gap-4 ${showFilters ? 'block' : 'hidden lg:flex'}`}>
-              {/* Category Filter */}
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
-              >
-                <option value="all">All Categories</option>
-                {steelProducts.categories.map(category => (
-                  <option key={category.id} value={category.slug}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-
-              {/* Brand Filter */}
-              <select
-                value={selectedBrand}
-                onChange={(e) => setSelectedBrand(e.target.value)}
-                className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
-              >
-                <option value="all">All Brands</option>
-                {['SteelCorp', 'MetalMax', 'PipePro', 'SheetMetal', 'AngleSteel'].map(brand => (
-                  <option key={brand} value={brand}>{brand}</option>
-                ))}
-              </select>
-
-              {/* Price Range */}
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-600 font-medium">Price:</span>
-                <input
-                  type="range"
-                  min="0"
-                  max="200000"
-                  value={priceRange[1]}
-                  onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-                  className="w-32"
-                />
-                <span className="text-sm text-gray-600 font-medium">₹{priceRange[1].toLocaleString('en-IN')}</span>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-8">
+          <div className="p-4 border-b border-gray-100">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              {/* Search */}
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
               </div>
 
-              {/* Clear Filters */}
-              <button
-                onClick={clearFilters}
-                className="px-6 py-3 text-blue-600 hover:text-blue-800 font-medium transition-colors bg-blue-50 hover:bg-blue-100 rounded-xl"
-              >
-                Clear All
-              </button>
-            </div>
-
-            {/* Sort and View Options */}
-            <div className="flex items-center space-x-4">
-              {/* Sort */}
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
-              >
-                <option value="featured">Featured</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="name">Name A-Z</option>
-              </select>
-
-              {/* View Mode */}
-              <div className="flex border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-3 transition-colors ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
+              {/* Quick Filters */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500"
                 >
-                  <Grid className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-3 transition-colors ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
+                  <option value="all">All Categories</option>
+                  {categories?.map(category => (
+                    <option key={category.category_id} value={category.slug}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:ring-2 focus:ring-blue-500"
                 >
-                  <List className="w-5 h-5" />
+                  <option value="featured">Featured</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="name">Name A-Z</option>
+                </select>
+
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                >
+                  Clear All
                 </button>
               </div>
             </div>
@@ -446,143 +389,57 @@ function ProductsContent() {
         </div>
 
         {/* Products Grid/List */}
-        <div className={viewMode === 'grid' 
-          ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8' 
-          : 'space-y-6'
-        }>
-          {sortedProducts.map((product) => (
-            <div
-              key={product.id}
-              className={`group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 ${
-                viewMode === 'list' ? 'flex' : ''
-              }`}
-            >
-              <div className={`relative overflow-hidden ${viewMode === 'list' ? 'w-64 flex-shrink-0' : ''}`}>
-                <div className="relative w-full h-56">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  />
-                </div>
+        <div className={'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'}>
+          {loading ? (
+            // Loading skeletons
+            Array(6).fill().map((_, i) => (
+              <div key={i} className="animate-pulse bg-white rounded-2xl overflow-hidden">
+                {/* Add skeleton structure */}
+              </div>
+            )))
+          : sortedProducts?.length > 0 ?(
+            sortedProducts.map(product => (
+              <ProductCard key={product.product_id} product={product} />
+            )))
+          : (
+            <div className="text-center py-16 col-span-full">
+              <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-6 flex items-center justify-center">
+                <Search className="w-12 h-12 text-gray-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">No products found</h3>
+              <p className="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
+              <button
                 
-                {/* Sale Badge */}
-                {product.originalPrice > product.price && (
-                  <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
-                    Save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')}
-                  </div>
-                )}
-
-                {/* Stock Status */}
-                <div className="absolute top-4 right-4">
-                  {product.inStock ? (
-                    <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                      In Stock
-                    </span>
-                  ) : (
-                    <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                      Back Order
-                    </span>
-                  )}
-                </div>
-
-                {/* Category Badge */}
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                    {product.categoryName}
-                  </span>
-                </div>
-              </div>
-              
-              <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
-                <div className={viewMode === 'list' ? 'flex justify-between' : ''}>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-2 font-medium">{product.brand}</p>
-                    <h3 className="font-bold text-gray-900 mb-3 text-lg group-hover:text-blue-600 transition-colors line-clamp-2">
-                      {product.name}
-                    </h3>
-                    
-                    {/* Rating */}
-                    <div className="flex items-center mb-4">
-                      <div className="flex text-yellow-400">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-300'}`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-gray-600 ml-2">({product.reviews})</span>
-                    </div>
-
-                    {/* Specifications Preview */}
-                    <div className="mb-4">
-                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                        {Object.entries(product.specifications).slice(0, 4).map(([key, value]) => (
-                          <div key={key} className="flex justify-between">
-                            <span className="font-medium">{key}:</span>
-                            <span>{value}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Price */}
-                    <div className="flex items-center space-x-3 mb-6">
-                      <span className="text-3xl font-bold text-gray-900">₹{product.price.toLocaleString('en-IN')}</span>
-                      {product.originalPrice > product.price && (
-                        <span className="text-lg text-gray-500 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
-                      )}
-                    </div>
-
-                    {/* Add to Cart Button */}
-                    <button 
-                      onClick={() => {
-                        addToCart(product);
-                        toast.success('Added to cart!', {
-                          duration: 2000,
-                          position: 'bottom-right',
-                          style: {
-                            background: '#10B981',
-                            color: '#fff',
-                          },
-                        });
-                      }}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
+                onClick={clearFilters}
+                className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+              >
+                Clear All Filters
+              </button>
             </div>
-          ))}
+          )}
         </div>
-
-        {/* Empty State */}
-        {sortedProducts.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-6 flex items-center justify-center">
-              <Search className="w-12 h-12 text-gray-400" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">No products found</h3>
-            <p className="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
-            <button
-              onClick={clearFilters}
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
-            >
-              Clear All Filters
-            </button>
-          </div>
-        )}
       </div>
 
       <Footer />
     </div>
   );
 }
+
+// Update the ProductSkeleton component
+const ProductSkeleton = () => (
+  <div className="bg-white rounded-xl overflow-hidden animate-pulse border border-gray-100">
+    <div className="aspect-square bg-gray-200" />
+    <div className="p-4">
+      <div className="w-20 h-4 bg-gray-200 rounded mb-2" />
+      <div className="w-full h-5 bg-gray-200 rounded mb-3" />
+      <div className="w-32 h-6 bg-gray-200 rounded mb-3" />
+      <div className="flex gap-2">
+        <div className="w-24 h-8 bg-gray-200 rounded" />
+        <div className="w-24 h-8 bg-gray-200 rounded" />
+      </div>
+    </div>
+  </div>
+);
 
 // Main component with Suspense boundary
 export default function ProductsPage() {

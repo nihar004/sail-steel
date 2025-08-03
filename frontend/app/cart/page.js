@@ -7,6 +7,8 @@ import { Trash2, Minus, Plus, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Image from 'next/image';
+import { Package, FileText } from 'lucide-react';
 
 export default function CartPage() {
   const { 
@@ -94,13 +96,26 @@ export default function CartPage() {
               {/* Cart Items List */}
               <div className="lg:col-span-2 space-y-6">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div 
+                    key={`${item.product_id}`} 
+                    className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
                     <div className="flex flex-col sm:flex-row gap-6">
                       {/* Product Image */}
                       <div className="flex-shrink-0">
-                        <div className="w-32 h-32 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center">
-                          <span className="text-gray-500 text-sm">Product</span>
-                        </div>
+                        {item.images && item.images.length > 0 ? (
+                          <Image
+                            src={item.images[0].image_path}
+                            alt={item.images[0].alt_text || item.name}
+                            width={128}
+                            height={128}
+                            className="w-32 h-32 object-cover rounded-xl"
+                          />
+                        ) : (
+                          <div className="w-32 h-32 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center">
+                            <Package className="w-12 h-12 text-gray-400" />
+                          </div>
+                        )}
                       </div>
 
                       {/* Product Details */}
@@ -108,13 +123,25 @@ export default function CartPage() {
                         <div className="flex justify-between items-start mb-2">
                           <div>
                             <h3 className="text-xl font-semibold text-gray-900 mb-1">{item.name}</h3>
-                            <p className="text-gray-600 mb-1">Brand: {item.brand}</p>
-                            <p className="text-sm text-gray-500 mb-1">Part #: {item.partNumber}</p>
-                            <p className="text-sm text-blue-600">{item.compatibility}</p>
+                            {item.category && (
+                              <span className="text-sm font-medium text-blue-600 mb-1 block">
+                                {item.category.name}
+                              </span>
+                            )}
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {item.specifications && Object.entries(item.specifications).map(([key, value]) => (
+                                <span 
+                                  key={key}
+                                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                                >
+                                  {key}: {value}
+                                </span>
+                              ))}
+                            </div>
                           </div>
                           <button
                             onClick={() => {
-                              removeFromCart(item.id);
+                              removeFromCart(item.product_id);
                               toast.success('Item removed from cart');
                             }}
                             className="text-gray-400 hover:text-red-500 transition-colors p-2"
@@ -123,51 +150,73 @@ export default function CartPage() {
                           </button>
                         </div>
 
-                        {/* Stock Status */}
-                        <div className="mb-4">
-                          {item.inStock ? (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                              <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                              In Stock
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
-                              <div className="w-2 h-2 bg-orange-400 rounded-full mr-2"></div>
-                              Back Order ({item.estimatedArrival})
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Price and Quantity */}
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                          <div className="flex items-center space-x-4">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-2xl font-bold text-gray-900">{formatPrice(item.price)}</span>
-                              {item.originalPrice > item.price && (
-                                <span className="text-lg text-gray-500 line-through">{formatPrice(item.originalPrice)}</span>
-                              )}
+                        {/* Stock & Price Info */}
+                        <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl font-bold text-gray-900">
+                                {formatPrice(item.price_per_unit * item.quantity)}
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                ({formatPrice(item.price_per_unit)}/{item.unit_of_measure})
+                              </span>
                             </div>
+                            {item.price_per_unit < item.original_price && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-gray-500 line-through">
+                                  {formatPrice(item.original_price * item.quantity)}
+                                </span>
+                                <span className="text-sm font-medium text-green-600">
+                                  Save {formatPrice((item.original_price - item.price_per_unit) * item.quantity)}
+                                </span>
+                              </div>
+                            )}
                           </div>
 
                           {/* Quantity Controls */}
-                          <div className="flex items-center space-x-3">
+                          <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1">
                             <button
-                              onClick={() => updateQuantity(item.id, Math.max(0, item.quantity - 1))}
-                              className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg"
+                              onClick={() => updateQuantity(item.product_id, Math.max(1, item.quantity - 1))}
+                              className="p-2 hover:bg-white rounded-md transition-colors"
+                              disabled={item.quantity <= 1}
                             >
                               <Minus className="w-4 h-4" />
                             </button>
-                            <span className="px-4 py-2 border-x border-gray-300 min-w-[3rem] text-center">
-                              {item.quantity}
-                            </span>
+                            <input
+                              type="number"
+                              min="1"
+                              value={item.quantity}
+                              onChange={(e) => updateQuantity(item.product_id, Math.max(1, parseInt(e.target.value) || 1))}
+                              className="w-16 text-center bg-transparent border-none focus:ring-0"
+                            />
                             <button
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg"
+                              onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
+                              className="p-2 hover:bg-white rounded-md transition-colors"
                             >
                               <Plus className="w-4 h-4" />
                             </button>
                           </div>
                         </div>
+
+                        {/* Documents & Certifications */}
+                        {item.documents && item.documents.length > 0 && (
+                          <div className="mt-4">
+                            <div className="flex flex-wrap gap-2">
+                              {item.documents.map((doc) => (
+                                <a
+                                  key={doc.document_id}
+                                  href={doc.file_path}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center px-3 py-1 rounded-lg bg-gray-50 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                >
+                                  <FileText className="w-4 h-4 mr-2" />
+                                  {doc.document_type}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

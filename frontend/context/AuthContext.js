@@ -34,8 +34,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await loginWithGoogle();
+      toast.success('Successfully logged in with Google!');
+      router.push('/');
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      toast.error(error.message || 'Failed to sign in with Google');
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, error, logout }}>
+    <AuthContext.Provider value={{ user, loading, error, logout, handleGoogleSignIn }}>
       {!loading && children}
     </AuthContext.Provider>
   );
