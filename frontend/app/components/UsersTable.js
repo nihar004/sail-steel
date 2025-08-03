@@ -167,7 +167,7 @@ export default function UsersTable() {
     try {
       if (action === 'makeAdmin') {
         const response = await fetch(
-          `http://localhost:5000/admin/users/${selectedUser.user_id}/role`,
+          `https://sail-steel.onrender.com/admin/users/${selectedUser.user_id}/role`,
           {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -179,7 +179,7 @@ export default function UsersTable() {
         toast.success('User role updated to admin successfully');
       } else if (action === 'toggleStatus') {
         const response = await fetch(
-          `http://localhost:5000/admin/users/${selectedUser.user_id}/toggle-status`,
+          `https://sail-steel.onrender.com/admin/users/${selectedUser.user_id}/toggle-status`,
           { 
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' }

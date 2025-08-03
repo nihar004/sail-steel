@@ -15,7 +15,7 @@ const getAuthHeader = async () => {
 export const checkAdminStatus = async (firebaseUid) => {
   try {
     const headers = await getAuthHeader();
-    const response = await fetch('http://localhost:5000/auth/check-admin', {
+    const response = await fetch('https://sail-steel.onrender.com/auth/check-admin', {
       method: 'POST',
       headers,
       body: JSON.stringify({ firebaseUid }),
@@ -36,7 +36,7 @@ export const fetchUsers = async (filters = {}) => {
     const headers = await getAuthHeader();
     const queryParams = new URLSearchParams(filters);
     const response = await fetch(
-      `http://localhost:5000/admin/users?${queryParams}`,
+      `https://sail-steel.onrender.com/admin/users?${queryParams}`,
       { headers }
     );
 
@@ -52,7 +52,7 @@ export const toggleUserStatus = async (userId) => {
   try {
     const headers = await getAuthHeader();
     const response = await fetch(
-      `http://localhost:5000/admin/users/${userId}/toggle-status`,
+      `https://sail-steel.onrender.com/admin/users/${userId}/toggle-status`,
       {
         method: 'PATCH',
         headers
@@ -71,7 +71,7 @@ export const updateUserRole = async (userId, role) => {
   try {
     const headers = await getAuthHeader();
     const response = await fetch(
-      `http://localhost:5000/admin/users/${userId}/role`,
+      `https://sail-steel.onrender.com/admin/users/${userId}/role`,
       {
         method: 'PATCH',
         headers,
@@ -91,7 +91,7 @@ export const updateUserRole = async (userId, role) => {
 export const fetchStats = async () => {
   try {
     const headers = await getAuthHeader();
-    const response = await fetch('http://localhost:5000/admin/users/stats', {
+    const response = await fetch('https://sail-steel.onrender.com/admin/users/stats', {
       headers
     });
 
@@ -111,7 +111,7 @@ export const fetchProducts = async (filters = {}) => {
     const headers = await getAuthHeader();
     const queryParams = new URLSearchParams(filters);
     const response = await fetch(
-      `http://localhost:5000/admin/products?${queryParams}`,
+      `https://sail-steel.onrender.com/admin/products?${queryParams}`,
       { headers }
     );
 
@@ -128,7 +128,7 @@ export const updateProduct = async (productId, data) => {
   try {
     const headers = await getAuthHeader();
     const response = await fetch(
-      `http://localhost:5000/admin/products/${productId}`,
+      `https://sail-steel.onrender.com/admin/products/${productId}`,
       {
         method: 'PATCH',
         headers,
@@ -148,7 +148,7 @@ export const addProduct = async (data) => {
   try {
     const headers = await getAuthHeader();
     const response = await fetch(
-      `http://localhost:5000/admin/products`,
+      `https://sail-steel.onrender.com/admin/products`,
       {
         method: 'POST',
         headers,
@@ -167,7 +167,7 @@ export const addProduct = async (data) => {
 export const fetchCategories = async () => {
   try {
     const headers = await getAuthHeader();
-    const response = await fetch('http://localhost:5000/admin/categories', {
+    const response = await fetch('https://sail-steel.onrender.com/admin/categories', {
       headers
     });
     if (!response.ok) throw new Error('Failed to fetch categories');
@@ -181,7 +181,7 @@ export const fetchCategories = async () => {
 export const addCategory = async (data) => {
   try {
     const headers = await getAuthHeader();
-    const response = await fetch('http://localhost:5000/admin/categories', {
+    const response = await fetch('https://sail-steel.onrender.com/admin/categories', {
       method: 'POST',
       headers,
       body: JSON.stringify(data)
@@ -197,7 +197,7 @@ export const addCategory = async (data) => {
 export const updateCategory = async (categoryId, data) => {
   try {
     const headers = await getAuthHeader();
-    const response = await fetch(`http://localhost:5000/admin/categories/${categoryId}`, {
+    const response = await fetch(`https://sail-steel.onrender.com/admin/categories/${categoryId}`, {
       method: 'PATCH',
       headers,
       body: JSON.stringify(data)
@@ -213,7 +213,7 @@ export const updateCategory = async (categoryId, data) => {
 export const deleteCategory = async (categoryId) => {
   try {
     const headers = await getAuthHeader();
-    const response = await fetch(`http://localhost:5000/admin/categories/${categoryId}`, {
+    const response = await fetch(`https://sail-steel.onrender.com/admin/categories/${categoryId}`, {
       method: 'DELETE',
       headers
     });
@@ -229,7 +229,7 @@ export const deleteProduct = async (productId) => {
   try {
     const headers = await getAuthHeader();
     const response = await fetch(
-      `http://localhost:5000/admin/products/${productId}`,
+      `https://sail-steel.onrender.com/admin/products/${productId}`,
       {
         method: 'DELETE',
         headers
@@ -247,7 +247,7 @@ export const deleteProduct = async (productId) => {
 // Add or update this function
 export const getPublicCategories = async () => {
   try {
-    const response = await fetch('http://localhost:5000/categories');
+    const response = await fetch('https://sail-steel.onrender.com/categories');
     if (!response.ok) throw new Error('Failed to fetch categories');
     return await response.json();
   } catch (error) {
@@ -259,7 +259,7 @@ export const getPublicCategories = async () => {
 // Add this function
 export const getPublicProducts = async () => {
   try {
-    const response = await fetch('http://localhost:5000/products');
+    const response = await fetch('https://sail-steel.onrender.com/products');
     if (!response.ok) throw new Error('Failed to fetch products');
     return await response.json();
   } catch (error) {
@@ -284,7 +284,7 @@ export const createUser = async (userData) => {
       gst_number: userData.gst_number || null
     };
 
-    const response = await fetch('http://localhost:5000/users', {
+    const response = await fetch('https://sail-steel.onrender.com/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

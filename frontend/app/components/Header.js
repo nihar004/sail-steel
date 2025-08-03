@@ -58,7 +58,7 @@ export default function Header() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5000/categories');
+        const response = await fetch('https://sail-steel.onrender.com/categories');
         const data = await response.json();
         // Transform the data to match the dropdown format
         const formattedCategories = data.map(category => ({

@@ -34,7 +34,7 @@ export const loginWithEmail = async (email, password) => {
     const result = await signInWithEmailAndPassword(auth, email, password);
     
     // Then check user status in your database
-    const response = await fetch('http://localhost:5000/auth/check-admin', {
+    const response = await fetch('https://sail-steel.onrender.com/auth/check-admin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export const loginWithGoogle = async () => {
 
     try {
       // Check if user already exists in our database
-      const response = await fetch(`http://localhost:5000/users/check/${result.user.uid}`);
+      const response = await fetch(`https://sail-steel.onrender.com/users/check/${result.user.uid}`);
       const exists = await response.json();
 
       if (!exists.found) {
