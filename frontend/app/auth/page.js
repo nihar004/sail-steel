@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { registerWithEmail, loginWithEmail, loginWithGoogle, resetPassword } from '../utils/auth';
 import toast from 'react-hot-toast';
 import { createUser } from '../utils/api';
+import Image from 'next/image';
 
 export default function AuthPage() {
   const searchParams = useSearchParams();
@@ -285,7 +286,7 @@ export default function AuthPage() {
             </div>
           ) : (
             <div className="flex items-center mb-8">
-              <img
+              <Image
                 src={user.photoURL || '/default-avatar.png'}
                 alt="Profile"
                 className="w-10 h-10 rounded-full border-2 border-orange-500"

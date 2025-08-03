@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
+import Image from 'next/image';
 import { 
   Users, 
   Package, 
@@ -246,9 +247,11 @@ const AdminDashboard = () => {
 
     return (
       <div className="relative w-24 h-24 group">
-        <img
+        <Image
           src={images[currentIndex].image_path}
           alt={images[currentIndex].alt_text || 'Product image'}
+          width={96}  // 24 * 4 = 96px
+          height={96} // 24 * 4 = 96px
           className="w-full h-full object-cover rounded-lg"
         />
         {images.length > 1 && (
@@ -302,7 +305,7 @@ const AdminDashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-2">Welcome back, Admin!</h2>
-            <p className="text-blue-100 mb-6">Here's what's happening with your steel trading business today</p>
+            <p className="text-blue-100 mb-6">Here&lsquo;s what&lsquo;s happening with your steel trading business today</p>
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}

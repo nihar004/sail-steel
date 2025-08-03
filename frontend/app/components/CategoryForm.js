@@ -57,7 +57,7 @@ export default function CategoryForm({ category, onSubmit, onCancel }) {
             className="w-full rounded-lg border border-gray-300 px-4 py-2"
             required
           />
-          <p className="mt-1 text-sm text-gray-500">URL-friendly version of name (e.g., "tmt-bars-rebars")</p>
+          <p className="mt-1 text-sm text-gray-500">URL-friendly version of name (e.g., &ldquo;tmt-bars-rebars&ldquo;)</p>
         </div>
 
         <div className="md:col-span-2">
